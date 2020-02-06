@@ -2,6 +2,7 @@
 Material Intro View is a showcase android library based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
 
 Modifications/additions from the base lib:
+- [ ] Migrate to AndroidX
 - [ ] Migrated to Kotlin
 - [ ] Added Sequence
 - [ ] Singleton-based approach for unified experience across your app
