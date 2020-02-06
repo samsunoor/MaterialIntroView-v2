@@ -1,56 +1,50 @@
-# MaterialIntroView [Beta]
-Material Intro View is a showcase android library.
+# MaterialIntroView
+Material Intro View is a showcase android library based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
 
-We saw this kind of showcase on [Fabulous App](http://www.thefabulous.co/) and we love it. Then decided to create showcase just like it.
+Modifications/additions from the base lib:
+- [ ] Migrated to Kotlin
+- [ ] Added Sequence
+- [ ] Singleton-based approach for unified experience across your app
+- [ ] Center-align text in balloon
+- [ ] Custom helper icon in ballon
+- [ ] Bug fixes
+
 
 # Screen
-<img src="https://raw.githubusercontent.com/iammert/MaterialIntroView/master/art/materialintroviewgif.gif"/>
+<img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView/master/art/materialintroviewgif.gif"/>
 
 # Usage
-```java
-new MaterialIntroView.Builder(this)
-                .enableDotAnimation(true)
-				.enableIcon(false)
-                .setFocusGravity(FocusGravity.CENTER)
-                .setFocusType(Focus.MINIMUM)
-                .setDelayMillis(500)
-                .enableFadeAnimation(true)
-                .performClick(true)
-                .setInfoText("Hi There! Click this card and see what happens.")
-                .setShapeType(ShapeType.CIRCLE)
-                .setTarget(view)
-                .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
-                .show();
+```kotlin
+MaterialIntroView.Builder(this).apply {
+enableDotAnimation(true)
+enableIcon(false)
+setFocusGravity(FocusGravity.CENTER)
+setFocusType(Focus.MINIMUM)
+setDelayMillis(500)
+enableFadeAnimation(true)
+performClick(true)
+setInfoText("Hi There! Click this card and see what happens.")
+setShapeType(ShapeType.CIRCLE)
+setTarget(view)
+setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
+show()
+}
 ```
 
 # Import
-Project build.gradle
-```java
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-}
-```
-
-Module build.gradle
-```java
-dependencies {
-  compile 'com.github.iammert:MaterialIntroView:1.6.0'
-}
-```
+Not yet available through maven
 
 # Builder Methods
-```java
+```kotlin
 .setMaskColor(Color.Blue) 
 ```
-```java
+```kotlin
 .setDelayMillis(3000) //starts after 3 seconds passed
 ```
-```java
+```kotlin
 .enableFadeAnimation(true) //View will appear/disappear with fade in/out animation
 ```
-```java
+```kotlin
 //ie. If your button's width has MATCH_PARENT.
 //Focus.ALL is not a good option. You can use
 //Focus.MINIMUM or Focus.NORMAL. See demos below.
@@ -58,77 +52,75 @@ dependencies {
 .setFocusType(Focus.NORMAL)
 .setFocusType(Focus.ALL)
 ```
-```java
+```kotlin
 //ie. You can focus on left of RecyclerView list item.
 .setFocusGravity(FocusGravity.LEFT)
 .setFocusType(FocusGravity.CENTER)
 .setFocusType(FocusGravity.RIGHT)
 ```
-```java
+```kotlin
 .setTarget(myButton) //Focus on myButton
 ```
-```java
+```kotlin
 .setTargetPadding(30) //add 30px padding to focus circle
 ```
-```java
+```kotlin
 .setInfoText("This is info text!") //Setting text will enable info dialog
 ```
-```java
+```kotlin
 .setTextColor(Color.Black) //Info dialog's text color is set to black
 ```
-```java
+```kotlin
 .setInfoTextSize(30) //Change text size
 ```
-```java
+```kotlin
 .setShapeType(ShapeType.CIRCLE) //Change shape of focus area
 .setShapeType(ShapeType.RECTANGLE) //Change shape of focus area
 ```
-```java
+```kotlin
 .setCustomShape(Shape shape) //Use custom shape
 ```
-```java
+```kotlin
 // Allow this showcase overlay to only show up once. Prevents multiple screens from showing at the same time.
 // Useful if you wish to show a tour step in a code that gets called multiple times
 .setIdempotent(true)
 ```
-```java
+```kotlin
 .setUsageId("intro_fab_button") //Store intro view status whether it is learnt or not
 ```
-```java
+```kotlin
 .enableDotAnimation(true) //Shows dot animation center of focus area
 ```
-```java
+```kotlin
 .enableIcon(false) //Turn off helper icon, default is true
 ```
-```java
+```kotlin
 .performClick(true) //Trigger click operation when user click focused area.
 ```
-```java
+```kotlin
 //If you don't want to perform click automatically
 //You can disable perform clik and handle it yourself
-.setListener(new MaterialIntroListener() {
-                    @Override
-                    public void onUserClicked(String materialIntroViewId) {
-                        
-                    }
-                })
-                
+.setListener{ viewUsageId: String ->
+
+}               
 ```
 # Configuration Method
-```java
+```kotlin
 //Create global config instance to not write same config to builder
 //again and again.
-MaterialIntroConfiguration config = new MaterialIntroConfiguration();
-config.setDelayMillis(1000);
-config.setFadeAnimationEnabled(true);
+val config = MaterialIntroConfiguration().apply {
+setDelayMillis(1000)
+setFadeAnimationEnabled(true)
+}
 ...
-.setConfiguration(config) //
+materialInfoViewBuilder.setConfiguration(config)
 ```
 
 # Use Custom Shapes
 You can use your own highlight shapes if Circle and Rectangle do not work for you. See source for `Circle` and `Rect` for implementation example.
-```java
-public class MyShape extends Shape {
+> TODO update doc
+```kotlin
+class MyShape: Shape {
     // ... your implementation
 }
 
@@ -145,9 +137,7 @@ public class MyShape extends Shape {
 ![Alt text](/art/art_gravity_left.png?raw=true)
 ![Alt text](/art/art_rectangle.png?raw=true)
 # TODO
-
-* [ ] Sample app will be more detailed about using library.
-* [ ] Sequence for MaterialIntroViews
+> To Be Updated
 
 # Authors
 
@@ -155,16 +145,13 @@ public class MyShape extends Shape {
 
 [Murat Can BUR](https://github.com/muratcanbur)
 
-
-# Docs
-[Chinese Doc](http://www.jianshu.com/p/1d2dcbc1e0f2)
-
+[shripal17](https://github.com/shripal17)
 
 License
 --------
 
 
-    Copyright 2015 Mert Şimşek.
+    Copyright 2020 Shripal Jain
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
