@@ -2,11 +2,13 @@
 Material Intro View is a showcase android library based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
 
 Modifications/additions from the base lib:
-- [ ] Migrate to AndroidX
-- [ ] Migrated to Kotlin
-- [ ] Added Sequence
+- [x] Migrate to AndroidX
+- [x] Migrated to Kotlin
+- [x] Add customisation options like help icon color, card background color, dot icon color
+- [x] Update Sample
+- [x] Center-align text in info card
+- [ ] Add Sequence
 - [ ] Singleton-based approach for unified experience across your app
-- [ ] Center-align text in balloon
 - [ ] Custom helper icon in ballon
 - [ ] Bug fixes
 
@@ -16,96 +18,67 @@ Modifications/additions from the base lib:
 
 # Usage
 ```kotlin
-MaterialIntroView.Builder(this).apply {
-enableDotAnimation(true)
-enableIcon(false)
-setFocusGravity(FocusGravity.CENTER)
-setFocusType(Focus.MINIMUM)
-setDelayMillis(500)
-enableFadeAnimation(true)
-performClick(true)
-setInfoText("Hi There! Click this card and see what happens.")
-setShapeType(ShapeType.CIRCLE)
-setTarget(view)
-setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
-show()
-}
+MaterialIntroView(activity).apply {
+      isDotViewEnabled = true
+      isDotAnimationEnabled = true
+      maskColor = Color.BLACK
+      padding = 24
+      dismissOnTouch = false
+      isHelpIconEnabled = true
+      isInfoEnabled = true
+      focusType = Focus.MINIMUM // or Focus.ALL or Focus.NORMAL
+      focusGravity = FocusGravity.CENTER // or FocusGravity.LEFT or FocusGravity.RIGHT
+      delayMillis = 100
+      fadeAnimationDurationMillis = 200
+      isFadeInAnimationEnabled = true
+      isFadeOutAnimationEnabled = true
+      cardBackgroundColor = Color.RED
+      dotIconColor = Color.GREEN
+      helpIconColor = Color.BLUE
+      isPerformClick = true
+      setInfoText("Your info text comes here")
+      setTarget(viewToBeFocused)
+      materialIntroListener = this@Activity
+      viewId = id // unique id
+      show(this@Activity)
+    }
 ```
 
 # Import
 Not yet available through maven
 
-# Builder Methods
-```kotlin
-.setMaskColor(Color.Blue) 
-```
-```kotlin
-.setDelayMillis(3000) //starts after 3 seconds passed
-```
-```kotlin
-.enableFadeAnimation(true) //View will appear/disappear with fade in/out animation
-```
-```kotlin
-//ie. If your button's width has MATCH_PARENT.
-//Focus.ALL is not a good option. You can use
-//Focus.MINIMUM or Focus.NORMAL. See demos below.
-.setFocusType(Focus.MINIMUM)
-.setFocusType(Focus.NORMAL)
-.setFocusType(Focus.ALL)
-```
-```kotlin
-//ie. You can focus on left of RecyclerView list item.
-.setFocusGravity(FocusGravity.LEFT)
-.setFocusType(FocusGravity.CENTER)
-.setFocusType(FocusGravity.RIGHT)
-```
-```kotlin
-.setTarget(myButton) //Focus on myButton
-```
-```kotlin
-.setTargetPadding(30) //add 30px padding to focus circle
-```
-```kotlin
-.setInfoText("This is info text!") //Setting text will enable info dialog
-```
-```kotlin
-.setTextColor(Color.Black) //Info dialog's text color is set to black
-```
-```kotlin
-.setInfoTextSize(30) //Change text size
-```
-```kotlin
-.setShapeType(ShapeType.CIRCLE) //Change shape of focus area
-.setShapeType(ShapeType.RECTANGLE) //Change shape of focus area
-```
-```kotlin
-.setCustomShape(Shape shape) //Use custom shape
-```
-```kotlin
-// Allow this showcase overlay to only show up once. Prevents multiple screens from showing at the same time.
-// Useful if you wish to show a tour step in a code that gets called multiple times
-.setIdempotent(true)
-```
-```kotlin
-.setUsageId("intro_fab_button") //Store intro view status whether it is learnt or not
-```
-```kotlin
-.enableDotAnimation(true) //Shows dot animation center of focus area
-```
-```kotlin
-.enableIcon(false) //Turn off helper icon, default is true
-```
-```kotlin
-.performClick(true) //Trigger click operation when user click focused area.
-```
-```kotlin
-//If you don't want to perform click automatically
-//You can disable perform clik and handle it yourself
-.setListener{ viewUsageId: String ->
+# Properties
+| Name        | Description                    | Default Value |
+|-------------|--------------------------------|---------------|
+|maskColor    | The background color           | 46% Transparent |
+|delayMillis  | Delay in ms for MIV (MaterialIntroView) to be shown  | 500 |
+| isFadeInAnimationEnabled | Enable fade-in animation for MIV | true |
+| isFadeOutAnimationEnabled | Enable fade-out animation for MIV | true |
+|focusGravity | FocusGravity.CENTER, FocusGravity.LEFT or FocusGravity.RIGHT | FocusGravity.CENTER |
+| focusType | Focus.ALL, Focus.MINIMUM or Focus.NORMAL | Focus.NORMAL|
+| padding | Padding (in px) for focusing the target view | 10 |
+| dismissOnTouch | Dissmiss intro when user touches anywhere | false |
+| isHelpIconEnabled| Whether to show the help icon in Info CardView | true |
+| isInfoEnabled | Whether to show info CardView | true |
+| isDotViewEnabled | Whether to show a dot at the centre of focus view | true |
+| isDotAnimationEnabled | Whether to zoom-in and zoom-out dot icon periodically | true |
+| viewId | Unique ID of View so that MIV Doesn't show again 2nd time onwards | NA |
+| shapeType | ShapeType.CIRCLE or ShapeType.RECTANGLE | ShapeType.CIRCLE |
+| dotIconColor | Tint Dot Icon | White |
+| helpIconColor | Tint help Icon | Black |
+| cardBackgroundColor | Info CardView Background Color | White |
+| isPerformClick | Click on the focused view when dismissing | false |
+| materialIntroListener | Callback when user dismisses a view | NA |
+| customShape | Use custom shape (Usage to be updated) | NA |
 
-}               
-```
+# Methods
+| Method        | Description                    |
+| setInfoTextColor(Int) | set text color of info text |
+| setInfoText(CharSequence) | Set text of info text |
+| setInfoTextSize(Float) | Set text size in sp for info text|
+
 # Configuration Method
+## Incomplete yet
 ```kotlin
 //Create global config instance to not write same config to builder
 //again and again.
