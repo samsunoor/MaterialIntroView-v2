@@ -73,7 +73,7 @@ Not yet available through maven
 
 # Methods
 | Method        | Description                    |
-|-------------|--------------------------------|---------------|
+|-------------|--------------------------------|
 | setInfoTextColor(Int) | set text color of info text |
 | setInfoText(CharSequence) | Set text of info text |
 | setInfoTextSize(Float) | Set text size in sp for info text|
