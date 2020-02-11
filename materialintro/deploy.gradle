@@ -9,7 +9,7 @@ bintray {
         userOrg = 'shripal17'
         vcsUrl = 'https://github.com/shripal17/MaterialIntroView.git'
         licenses = ['Apache-2.0']
-
+        desc = 'Beautiful and highly customisable Android Library to help your users get started with your awesome app!'
         version {
             name = project.version
             released = new Date()
@@ -66,7 +66,7 @@ def getBintrayKey() {
 }
 
 task deployRelease {
-    logger.lifecycle('BlurKit - Starting Release Deployment')
+    logger.lifecycle('MaterialIntroView - Starting Release Deployment')
     shouldRunAfter(buildForDeployment)
 
     dependsOn cleanForDeployment
@@ -76,8 +76,8 @@ task deployRelease {
     doLast {
         logger.lifecycle(bintrayUpload.getVersionName())
         bintrayUpload.setVersionName(bintrayUpload.getVersionName())
-        bintrayUpload.setUserOrg('camerakit')
-        bintrayUpload.setRepoName('other')
+        bintrayUpload.setUserOrg('shripal17')
+        bintrayUpload.setRepoName('codertainment')
 
         logger.lifecycle('Deploying version ' + bintrayUpload.getVersionName() + ' in ' + bintrayUpload.getRepoName())
     }
