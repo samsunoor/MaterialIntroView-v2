@@ -61,7 +61,7 @@ val miv = materialIntro(show = true /* if you want to show miv instantly */) {
       isDotAnimationEnabled = true
       dotIconColor = Color.WHITE
 
-      viewId = "unique_id
+      viewId = "unique_id"
       targetView = viewToBeFocusedHere
 
       isPerformClick = false
