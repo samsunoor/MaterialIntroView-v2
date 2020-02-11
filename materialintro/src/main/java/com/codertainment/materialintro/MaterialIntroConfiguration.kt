@@ -7,6 +7,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
+import com.codertainment.materialintro.animation.MaterialIntroListener
 import com.codertainment.materialintro.shape.Focus
 import com.codertainment.materialintro.shape.FocusGravity
 import com.codertainment.materialintro.shape.Shape
@@ -62,5 +63,6 @@ data class MaterialIntroConfiguration(
   var userClickAsDisplayed: Boolean = true,
 
   var shapeType: ShapeType = ShapeType.CIRCLE,
-  var customShape: Shape? = null
+  var customShape: Shape? = null,
+  var materialIntroListener: MaterialIntroListener? = null
 )

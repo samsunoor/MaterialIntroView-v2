@@ -625,6 +625,8 @@ class MaterialIntroView : RelativeLayout {
 
     this.shapeType = config.shapeType
     this.customShape = config.customShape
+
+    this.materialIntroListener = config.materialIntroListener
   }
 
   private val infoParent
