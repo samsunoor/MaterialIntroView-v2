@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Handler
 import android.util.AttributeSet
@@ -12,6 +13,9 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.cardview.widget.CardView
 import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.R
@@ -84,7 +88,7 @@ class MaterialIntroView : RelativeLayout {
   /**
    * Target View
    */
-  lateinit var targetView: Target
+  private lateinit var myTargetView: Target
 
   /**
    * Eraser
@@ -117,12 +121,12 @@ class MaterialIntroView : RelativeLayout {
   private var myHeight = 0
 
   /**
-   * Dismiss on touch any position
+   * Dismiss on touch any where
    */
   var dismissOnTouch = false
 
   /**
-   * Info dialog view
+   * Info card view container
    */
   private lateinit var infoView: RelativeLayout
   /**
@@ -130,30 +134,74 @@ class MaterialIntroView : RelativeLayout {
    */
   private lateinit var infoCardView: CardView
   /**
-   * Info Dialog Text
+   * Info TextView
    */
   private lateinit var infoTextView: TextView
-  /**
-   * Info dialog text color
-   */
-  private var infoTextColor = Constants.DEFAULT_COLOR_TEXTVIEW_INFO
-  /**
-   * Help Dialog Icon
-   */
-  private lateinit var helpIconView: ImageView
-  /**
-   * Drawable resource to set as help icon
-   */
-  var helpIconResource = R.drawable.ic_help_outline_black
-  /**
-   * Help Icon will be shown if this is true
-   */
-  var isHelpIconEnabled = true
   /**
    * Info dialog will be shown
    * If this value true
    */
   var isInfoEnabled = true
+  /**
+   * Info Text
+   */
+  var infoText: CharSequence = ""
+  /**
+   * Info Text Color
+   */
+  @ColorInt
+  var infoTextColor: Int? = null
+  /**
+   * Info Text Size in sp
+   */
+  var infoTextSize: Float? = null
+  /**
+   * Info Text Alignment, Use View.TEXT_ALIGNMENT_
+   */
+  var infoTextAlignment: Int = View.TEXT_ALIGNMENT_CENTER
+  /**
+   * Info Text Custom Typeface
+   */
+  var infoTextTypeface: Typeface? = null
+
+  /**
+   * Card View Background Color
+   */
+  @ColorInt
+  var infoCardBackgroundColor: Int? = null
+
+  /**
+   * Help Dialog Icon
+   */
+  private lateinit var helpIconView: ImageView
+  /**
+   * Help Icon will be shown if this is true
+   */
+  var isHelpIconEnabled = true
+  /**
+   * Drawable resource to set as help icon
+   */
+  @DrawableRes
+  var helpIconResource: Int? = null
+  /**
+   * Drawable to set as help icon
+   */
+  var helpIconDrawable: Drawable? = null
+  /**
+   * Tint Help Icon
+   */
+  @ColorInt
+  var helpIconColor: Int? = null
+
+  /**
+   * Custom View for info card
+   */
+  var infoCustomView: View? = null
+  /**
+   * Layout Resource for custom view
+   */
+  @LayoutRes
+  var infoCustomViewRes: Int? = null
 
   /**
    * Dot view will appear center of
@@ -168,7 +216,12 @@ class MaterialIntroView : RelativeLayout {
   /**
    * Dot View animated with zoom in & zoom out animation if this is true
    */
-  var isDotAnimationEnabled = false
+  var isDotAnimationEnabled = true
+  /**
+   * Tint Dot Icon
+   */
+  @ColorInt
+  var dotIconColor: Int? = null
 
   /**
    * Save/Retrieve status of MaterialIntroView
@@ -182,7 +235,7 @@ class MaterialIntroView : RelativeLayout {
    * Check using this Id whether user learned
    * or not.
    */
-  lateinit var viewId: String
+  var viewId: String = ""
   /**
    * When layout completed, we set this true
    * Otherwise onGlobalLayoutListener stuck on loop.
@@ -197,10 +250,17 @@ class MaterialIntroView : RelativeLayout {
    * if this is true
    */
   var isPerformClick = false
+
   /**
-   * Disallow this MaterialIntroView from showing up more than once at a time
+   * Show MIV only once
    */
-  private var isIdempotent = false
+  var showOnlyOnce = true
+
+  /**
+   * Mark view as displayed only when user clicks
+   */
+  var userClickAsDisplayed = true
+
   /**
    * Shape of target
    */
@@ -209,18 +269,6 @@ class MaterialIntroView : RelativeLayout {
    * Use custom shape
    */
   var customShape: Shape? = null
-  /**
-   * Tint Dot Icon
-   */
-  var dotIconColor = Constants.DEFAULT_DOT_ICON_COLOR
-  /**
-   * Tint Help Icon
-   */
-  var helpIconColor = Constants.DEFAULT_HELP_ICON_COLOR
-  /**
-   * Card View Background Color
-   */
-  var cardBackgroundColor = Constants.DEFAULT_CARD_BACKGROUND_COLOR
 
   constructor(context: Context) : super(context) {
     init()
@@ -316,7 +364,7 @@ class MaterialIntroView : RelativeLayout {
     when (event.action) {
       MotionEvent.ACTION_DOWN -> {
         if (isTouchOnFocus && isPerformClick) {
-          targetView.view.apply {
+          myTargetView.view.apply {
             isPressed = true
             invalidate()
           }
@@ -328,7 +376,7 @@ class MaterialIntroView : RelativeLayout {
           dismiss()
         }
         if (isTouchOnFocus && isPerformClick) {
-          targetView.view.apply {
+          myTargetView.view.apply {
             performClick()
             isPressed = true
             invalidate()
@@ -342,9 +390,11 @@ class MaterialIntroView : RelativeLayout {
     return super.onTouchEvent(event)
   }
 
-  fun setTarget(view: View) {
-    targetView = ViewTarget(view)
-  }
+  var targetView
+    get() = myTargetView.view
+    set(value) {
+      myTargetView = ViewTarget(value)
+    }
 
   /**
    * Shows material view with fade in
@@ -359,19 +409,60 @@ class MaterialIntroView : RelativeLayout {
           customShape!!
         }
         shapeType == ShapeType.CIRCLE -> {
-          Circle(targetView, focusType, focusGravity, padding)
+          Circle(myTargetView, focusType, focusGravity, padding)
         }
         else -> {
-          Rect(targetView, focusType, focusGravity, padding)
+          Rect(myTargetView, focusType, focusGravity, padding)
         }
       }
     }
-    infoCardView.setCardBackgroundColor(cardBackgroundColor)
-    infoTextView.setTextColor(infoTextColor)
-    helpIconView.setColorFilter(helpIconColor)
-    dotView.setColorFilter(dotIconColor)
 
-    if (preferencesManager.isDisplayed(viewId)) return
+    if (isInfoEnabled) {
+      if (infoCustomViewRes != null || infoCustomView != null) {
+        infoCustomViewRes?.let {
+          infoCustomView = LayoutInflater.from(context).inflate(it, infoCardView, false)
+        }
+        infoCardView.removeAllViews()
+        infoCardView.addView(infoCustomView)
+      } else {
+        infoCardBackgroundColor?.let {
+          infoCardView.setCardBackgroundColor(it)
+        }
+        infoTextView.text = infoText
+        infoTextView.textAlignment = infoTextAlignment
+        infoTextView.typeface = infoTextTypeface
+
+        infoTextSize?.let {
+          infoTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, it)
+        }
+
+        infoTextColor?.let {
+          infoTextView.setTextColor(it)
+        }
+        if (isHelpIconEnabled) {
+          helpIconResource?.let {
+            helpIconView.setImageResource(it)
+          }
+          helpIconDrawable?.let {
+            helpIconView.setImageDrawable(it)
+          }
+          helpIconColor?.let {
+            helpIconView.setColorFilter(it)
+          }
+        }
+      }
+    }
+
+    if (isDotViewEnabled) {
+      dotIconColor?.let {
+        dotView.setColorFilter(it)
+      }
+    }
+
+    if (preferencesManager.isDisplayed(viewId)) {
+      materialIntroListener?.onIntroDone(false, viewId)
+      return
+    }
     (activity.window.decorView as ViewGroup).addView(this)
     isReady = true
     myHandler.postDelayed(
@@ -389,7 +480,7 @@ class MaterialIntroView : RelativeLayout {
           visibility = VISIBLE
       }, delayMillis
     )
-    if (isIdempotent) {
+    if (showOnlyOnce && !userClickAsDisplayed) {
       preferencesManager.setDisplayed(viewId)
     }
   }
@@ -398,7 +489,7 @@ class MaterialIntroView : RelativeLayout {
    * Dismiss Material Intro View
    */
   fun dismiss() {
-    if (!isIdempotent) {
+    if (showOnlyOnce && userClickAsDisplayed) {
       preferencesManager.setDisplayed(viewId)
     }
     if (isFadeOutAnimationEnabled) {
@@ -415,7 +506,7 @@ class MaterialIntroView : RelativeLayout {
   private fun removeSelf() {
     visibility = GONE
     removeMaterialView()
-    materialIntroListener?.onUserClicked(viewId)
+    materialIntroListener?.onIntroDone(true, viewId)
   }
 
   private fun removeMaterialView() {
@@ -483,30 +574,57 @@ class MaterialIntroView : RelativeLayout {
     }
   }
 
-  fun setInfoTextColor(colorTextViewInfo: Int) {
-    this.infoTextColor = colorTextViewInfo
-    infoTextView.setTextColor(this.infoTextColor)
-  }
+  fun withConfig(config: MaterialIntroConfiguration?) {
+    if (config == null) return
+    this.maskColor = config.maskColor
 
-  fun setInfoText(textViewInfo: CharSequence) {
-    this.infoTextView.text = textViewInfo
-  }
+    this.delayMillis = config.delayMillis
 
-  fun setInfoTextSize(textViewInfoSize: Float) {
-    this.infoTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textViewInfoSize)
-  }
+    this.isFadeInAnimationEnabled = config.isFadeInAnimationEnabled
+    this.isFadeOutAnimationEnabled = config.isFadeOutAnimationEnabled
+    this.fadeAnimationDurationMillis = config.fadeAnimationDurationMillis
 
-  fun setConfiguration(configuration: MaterialIntroConfiguration) {
-    this.maskColor = configuration.maskColor
-    this.delayMillis = configuration.delayMillis
-    this.isFadeInAnimationEnabled = configuration.isFadeInAnimationEnabled
-    this.isFadeOutAnimationEnabled = configuration.isFadeOutAnimationEnabled
-    this.infoTextColor = configuration.colorTextViewInfo
-    this.isDotViewEnabled = configuration.isDotViewEnabled
-    this.dismissOnTouch = configuration.isDismissOnTouch
-    this.infoTextColor = configuration.colorTextViewInfo
-    this.focusType = configuration.focusType
-    this.focusGravity = configuration.focusGravity
+    this.focusType = config.focusType
+    this.focusGravity = config.focusGravity
+
+    this.padding = config.padding
+
+    this.dismissOnTouch = config.dismissOnTouch
+
+    this.isInfoEnabled = config.isInfoEnabled
+    this.infoText = config.infoText
+    this.infoTextColor = config.infoTextColor
+    this.infoTextSize = config.infoTextSize
+    this.infoTextAlignment = config.infoTextAlignment
+    this.infoTextTypeface = config.infoTextTypeface
+    this.infoCardBackgroundColor = config.infoCardBackgroundColor
+
+    this.isHelpIconEnabled = config.isHelpIconEnabled
+    this.helpIconResource = config.helpIconResource
+    this.helpIconDrawable = config.helpIconDrawable
+    this.helpIconColor = config.helpIconColor
+
+    this.infoCustomView = config.infoCustomView
+    this.infoCustomViewRes = config.infoCustomViewRes
+
+    this.isDotViewEnabled = config.isDotViewEnabled
+    this.isDotAnimationEnabled = config.isDotAnimationEnabled
+    this.dotIconColor = config.dotIconColor
+
+    config.viewId?.let {
+      this.viewId = it
+    }
+    config.targetView?.let {
+      this.targetView = it
+    }
+
+    this.isPerformClick = config.isPerformClick
+
+    this.showOnlyOnce = config.showOnlyOnce
+    this.userClickAsDisplayed = config.userClickAsDisplayed
+
+    this.shapeType = config.shapeType
+    this.customShape = config.customShape
   }
 
   private val infoParent
@@ -522,3 +640,12 @@ class MaterialIntroView : RelativeLayout {
     }
   }
 }
+
+fun Activity.materialIntro(show: Boolean = false, config: MaterialIntroConfiguration? = null, func: MaterialIntroView.() -> Unit): MaterialIntroView =
+  MaterialIntroView(this).apply {
+    func()
+    withConfig(config)
+    if (show) {
+      show(this@materialIntro)
+    }
+  }

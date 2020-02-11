@@ -18,7 +18,7 @@ import com.codertainment.materialintro.sample.fragment.MainFragment
 import com.codertainment.materialintro.sample.fragment.RecyclerViewFragment
 import com.codertainment.materialintro.shape.Focus
 import com.codertainment.materialintro.shape.FocusGravity
-import com.codertainment.materialintro.view.MaterialIntroView
+import com.codertainment.materialintro.view.materialIntro
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_toolbar.*
 
@@ -56,7 +56,7 @@ class ToolbarMenuItemActivity : AppCompatActivity(), NavigationView.OnNavigation
     Handler().post {
       helpAction = findViewById(R.id.help)
       shareAction = findViewById(R.id.share)
-      showIntro(findViewById(R.id.search), MENU_SEARCH_ID_TAG, getString(R.string.guide_setup_profile), FocusGravity.CENTER)
+      showIntro(findViewById(R.id.search), MENU_SEARCH_ID_TAG, getString(R.string.guide_setup_profile))
     }
     return true
   }
@@ -93,42 +93,40 @@ class ToolbarMenuItemActivity : AppCompatActivity(), NavigationView.OnNavigation
    * @param text         Display message
    * @param focusGravity Focus Gravity of the display
    */
-  private fun showIntro(view: View, id: String, text: String, focusGravity: FocusGravity) {
-    MaterialIntroView(this).apply {
+  private fun showIntro(view: View, id: String, text: String) {
+    materialIntro(true) {
       isDotAnimationEnabled = true
-      this.focusGravity = focusGravity
+      focusGravity = FocusGravity.CENTER
       focusType = Focus.MINIMUM
       delayMillis = 100
       fadeAnimationDurationMillis = 200
       isFadeInAnimationEnabled = true
       isFadeOutAnimationEnabled = true
-      cardBackgroundColor = Color.RED
+      infoCardBackgroundColor = Color.RED
       dotIconColor = Color.GREEN
       helpIconColor = Color.BLUE
       isPerformClick = true
-      setInfoText(text)
-      setTarget(view)
+      infoText = text
+      targetView = view
       materialIntroListener = this@ToolbarMenuItemActivity
       viewId = id
-      show(this@ToolbarMenuItemActivity)
+      helpIconResource = R.drawable.icon_miv
     }
   }
 
-  override fun onUserClicked(materialIntroViewId: String?) {
-    when (materialIntroViewId) {
+  override fun onIntroDone(onUserClick: Boolean, viewId: String) {
+    when (viewId) {
       MENU_SEARCH_ID_TAG -> showIntro(
         helpAction,
         MENU_ABOUT_ID_TAG,
-        getString(R.string.guide_setup_profile),
-        FocusGravity.CENTER
+        getString(R.string.guide_setup_profile)
       )
       MENU_ABOUT_ID_TAG -> showIntro(
         shareAction,
         MENU_SHARED_ID_TAG,
-        getString(R.string.guide_setup_profile),
-        FocusGravity.CENTER
+        getString(R.string.guide_setup_profile)
       )
-      MENU_SHARED_ID_TAG -> Toast.makeText(this@ToolbarMenuItemActivity, "Complete!", Toast.LENGTH_SHORT).show()
+      MENU_SHARED_ID_TAG -> if (onUserClick) Toast.makeText(this@ToolbarMenuItemActivity, "Complete!", Toast.LENGTH_SHORT).show()
     }
   }
 

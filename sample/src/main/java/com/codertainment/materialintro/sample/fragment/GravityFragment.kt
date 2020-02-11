@@ -1,6 +1,7 @@
 package com.codertainment.materialintro.sample.fragment
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,26 +27,28 @@ class GravityFragment : Fragment(), MaterialIntroListener {
     cardView1 = view.findViewById(R.id.my_card)
     cardView2 = view.findViewById(R.id.my_card2)
     cardView3 = view.findViewById(R.id.my_card3)
-    showIntro(cardView1, INTRO_CARD1, "This intro focuses on RIGHT", FocusGravity.RIGHT)
+    showIntro(cardView1, INTRO_CARD1, "This intro focuses on RIGHT", FocusGravity.RIGHT, View.TEXT_ALIGNMENT_VIEW_END)
     return view
   }
 
-  override fun onUserClicked(materialIntroViewId: String?) {
-    if (materialIntroViewId === INTRO_CARD1) showIntro(
+  override fun onIntroDone(onUserClick: Boolean, viewId: String) {
+    if (viewId === INTRO_CARD1) showIntro(
       cardView2,
       INTRO_CARD2,
       "This intro focuses on CENTER.",
-      FocusGravity.CENTER
+      FocusGravity.CENTER,
+      View.TEXT_ALIGNMENT_CENTER
     )
-    if (materialIntroViewId === INTRO_CARD2) showIntro(
+    if (viewId === INTRO_CARD2) showIntro(
       cardView3,
       INTRO_CARD3,
       "This intro focuses on LEFT.",
-      FocusGravity.LEFT
+      FocusGravity.LEFT,
+      View.TEXT_ALIGNMENT_VIEW_START
     )
   }
 
-  private fun showIntro(view: View, id: String, text: String, focusGravity: FocusGravity) {
+  private fun showIntro(view: View, id: String, text: String, focusGravity: FocusGravity, textAlignment: Int) {
     if (activity == null) return
     MaterialIntroView(requireActivity()).apply {
       isDotAnimationEnabled = true
@@ -55,8 +58,9 @@ class GravityFragment : Fragment(), MaterialIntroListener {
       isFadeInAnimationEnabled = true
       isFadeOutAnimationEnabled = true
       isPerformClick = true
-      setInfoText(text)
-      setTarget(view)
+      infoText = text
+      targetView = view
+      infoTextAlignment = textAlignment
       materialIntroListener = this@GravityFragment
       viewId = id
       show(requireActivity())

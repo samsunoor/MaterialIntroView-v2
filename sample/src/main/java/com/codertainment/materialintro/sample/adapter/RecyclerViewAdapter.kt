@@ -24,7 +24,7 @@ class RecyclerViewAdapter(private val context: Context) : RecyclerView.Adapter<E
     val song = songList[position]
     holder.coverName.text = song.songName
     holder.singerName.text = song.singerName
-    //Picasso.with(context).load(song.songArt).into(holder.coverImage)
+    holder.coverImage.setImageResource(song.songArt)
   }
 
   override fun getItemCount(): Int {
@@ -37,7 +37,7 @@ class RecyclerViewAdapter(private val context: Context) : RecyclerView.Adapter<E
   }
 
   inner class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var coverImage = itemView.findViewById<ImageView>(R.id.cover_photo)
+    var coverImage: ImageView = itemView.findViewById(R.id.cover_photo)
     var coverName: TextView = itemView.findViewById(R.id.cover_name)
     var singerName: TextView = itemView.findViewById(R.id.singer_name)
   }

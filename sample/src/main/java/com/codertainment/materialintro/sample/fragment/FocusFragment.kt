@@ -41,20 +41,20 @@ class FocusFragment : Fragment(), MaterialIntroListener {
       isFadeOutAnimationEnabled = true
       materialIntroListener = this@FocusFragment
       isPerformClick = true
-      setInfoText(text)
-      setTarget(view)
+      infoText = text
+      targetView = view
       viewId = id
       show(requireActivity())
     }
   }
 
-  override fun onUserClicked(materialIntroViewId: String?) {
-    if (materialIntroViewId === INTRO_FOCUS_1) showIntro(
+  override fun onIntroDone(onUserClick: Boolean, viewId: String) {
+    if (viewId === INTRO_FOCUS_1) showIntro(
       button2,
       INTRO_FOCUS_2,
       "This intro view focus on minimum size",
       Focus.MINIMUM
-    ) else if (materialIntroViewId === INTRO_FOCUS_2) showIntro(
+    ) else if (viewId === INTRO_FOCUS_2) showIntro(
       button3,
       INTRO_FOCUS_3,
       "This intro view focus on normal size (avarage of MIN and ALL)",

@@ -47,8 +47,8 @@ class MainFragment : Fragment(), View.OnClickListener {
       isFadeInAnimationEnabled = true
       isFadeOutAnimationEnabled = true
       isPerformClick = true
-      setInfoText(text)
-      setTarget(view)
+      infoText = text
+      targetView = view
       shapeType = ShapeType.RECTANGLE
       viewId = usageId
       show(requireActivity())

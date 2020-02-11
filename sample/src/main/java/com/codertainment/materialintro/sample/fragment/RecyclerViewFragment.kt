@@ -42,15 +42,15 @@ class RecyclerViewFragment : Fragment(), MaterialIntroListener {
       isFadeOutAnimationEnabled = true
       materialIntroListener = this@RecyclerViewFragment
       isPerformClick = true
-      setInfoText("This intro focuses on Recyclerview item")
-      setTarget(recyclerView.getChildAt(2))
+      infoText = "This intro focuses on Recyclerview item"
+      targetView = recyclerView.getChildAt(2)
       viewId = INTRO_CARD
       show(requireActivity())
     }
   }
 
   private fun loadData() {
-    val song = Song("Diamond", R.drawable.diamond, "Rihanna")
+    val song = Song("Diamonds", R.drawable.diamond, "Rihanna")
     val songList: MutableList<Song> = ArrayList()
     for (i in 0..9) {
       songList.add(song)
@@ -67,8 +67,8 @@ class RecyclerViewFragment : Fragment(), MaterialIntroListener {
     recyclerView.adapter = adapter
   }
 
-  override fun onUserClicked(materialIntroViewId: String?) {
-    if (materialIntroViewId == INTRO_CARD) {
+  override fun onIntroDone(onUserClick: Boolean, viewId: String) {
+    if (viewId == INTRO_CARD && onUserClick) {
       Toast.makeText(activity, "User Clicked", Toast.LENGTH_SHORT).show()
     }
   }

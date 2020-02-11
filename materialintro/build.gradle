@@ -1,7 +1,20 @@
+plugins {
+    id 'com.github.dcendents.android-maven' version '2.1'
+}
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            groupId project.group
+            artifactId 'materialintroview-v2'
+            packaging 'aar'
+        }
+    }
+}
 
+apply from : 'deploy.gradle'
 android {
     compileSdkVersion 28
 
