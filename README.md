@@ -1,5 +1,6 @@
 # MaterialIntroView
-Material Intro View is a showcase android library based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
+Beautiful and highly customisable material-design based android library to help your users get started with your awesome app!
+Based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
 
 Modifications/additions from the base lib:
 - [x] Migrate to AndroidX
@@ -20,11 +21,32 @@ Modifications/additions from the base lib:
 - [x] Bug fixes
 
 
-# Screen
+# Screenshot
 <img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView/master/art/materialintroviewgif.gif"/>
 
+# Import
+1. Add to project-level build.grdle
+```groovy
+buildscript {
+  ...
+}
+allProjects {
+  repositories {
+    ...
+    maven { url "https://dl.bintray.com/shripal17/codertainment" }
+  }
+}
+```
+2. Add to module-level build.gradle
+```groovy
+dependencies {
+  ...
+  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.0'
+}
+```
+
 # Usage in Activity/Fragment
-Use activity?.materialIntro in fragments
+Use `activity?.materialIntro` in fragments
 ```kotlin
 val miv = materialIntro(show = true /* if you want to show miv instantly */) {
       maskColor = Color.BLUE
@@ -74,9 +96,6 @@ val miv = materialIntro(show = true /* if you want to show miv instantly */) {
 // if you want to show it later
 miv.show(activity)
 ```
-
-# Import
-Not yet available through maven
 
 # Properties
 | Name        | Description                    | Default Value |
