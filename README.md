@@ -6,42 +6,73 @@ Modifications/additions from the base lib:
 - [x] Migrated to Kotlin
 - [x] Add customisation options like help icon color, card background color, dot icon color
 - [x] Update Sample
-- [x] Center-align text in info card
+- [x] Custom align text in info card
+- [x] Custom help icon in info card
+- [x] Custom typeface for info text
+- [x] Custom Info View inside info card (using view or layout resource)
+- [x] Kotlin extension function for activity
+- [x] Full integration with MaterialIntroConfiguration
+- [x] Enhanced MaterialIntroListener, know when user has clicked or MIV was dismissed because it was set as saved
+- [x] Add option (userClickAsDisplayed) to set view intro as displayed only if user clicks on target view or outside too (if dismissOnTouch is enabled)
+- [x] More kotlin friendly
 - [ ] Add Sequence
 - [ ] Singleton-based approach for unified experience across your app
-- [ ] Custom helper icon in ballon
-- [ ] Bug fixes
+- [x] Bug fixes
 
 
 # Screen
 <img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView/master/art/materialintroviewgif.gif"/>
 
-# Usage
+# Usage in Activity/Fragment
+Use activity?.materialIntro in fragments
 ```kotlin
-MaterialIntroView(activity).apply {
-      isDotViewEnabled = true
-      isDotAnimationEnabled = true
-      maskColor = Color.BLACK
-      padding = 24
-      dismissOnTouch = false
-      isHelpIconEnabled = true
-      isInfoEnabled = true
-      focusType = Focus.MINIMUM // or Focus.ALL or Focus.NORMAL
-      focusGravity = FocusGravity.CENTER // or FocusGravity.LEFT or FocusGravity.RIGHT
-      delayMillis = 100
-      fadeAnimationDurationMillis = 200
+val miv = materialIntro(show = true /* if you want to show miv instantly */) {
+      maskColor = Color.BLUE
+      delayMillis = 300
+
       isFadeInAnimationEnabled = true
       isFadeOutAnimationEnabled = true
-      cardBackgroundColor = Color.RED
-      dotIconColor = Color.GREEN
-      helpIconColor = Color.BLUE
-      isPerformClick = true
-      setInfoText("Your info text comes here")
-      setTarget(viewToBeFocused)
-      materialIntroListener = this@Activity
-      viewId = id // unique id
-      show(this@Activity)
+      fadeAnimationDurationMillis = 300
+
+      focusType = Focus.ALL
+      focusGravity = FocusGravity.CENTER
+
+      padding = 24 // in px
+
+      dismissOnTouch = false
+
+      isInfoEnabled = true
+      infoText = ""
+      infoTextColor = Color.BLACK
+      infoTextSize = 18f
+      infoTextAlignment = View.TEXT_ALIGNMENT_CENTER
+      infoTextTypeface = Typeface.DEFAULT_BOLD
+      infoCardBackgroundColor = Color.WHITE
+
+      isHelpIconEnabled = true
+      helpIconResource = R.drawable.your_icon
+      helpIconDrawable = yourDrawable
+      helpIconColor = Color.RED
+
+      infoCustomView = yourViewHere
+      infoCustomViewRes = R.layout.your_custom_view_here
+
+      isDotViewEnabled = true
+      isDotAnimationEnabled = true
+      dotIconColor = Color.WHITE
+
+      viewId = "unique_id
+      targetView = viewToBeFocusedHere
+
+      isPerformClick = false
+
+      showOnlyOnce = true
+      userClickAsDisplayed = true
+
+      shapeType = ShapeType.CIRCLE
     }
+// if you want to show it later
+miv.show(activity)
 ```
 
 # Import
@@ -58,37 +89,93 @@ Not yet available through maven
 | focusType | Focus.ALL, Focus.MINIMUM or Focus.NORMAL | Focus.NORMAL|
 | padding | Padding (in px) for focusing the target view | 10 |
 | dismissOnTouch | Dissmiss intro when user touches anywhere | false |
-| isHelpIconEnabled| Whether to show the help icon in Info CardView | true |
 | isInfoEnabled | Whether to show info CardView | true |
+| infoText | Text (CharSequence) to be displayed in info CardView | "" |
+| infoTextColor | Text Color for info text | textColorPrimary |
+| infoTextSize | Text size in sp for info text | 16sp |
+| infoTextAlignment | Text alignment for info text | View.TEXT_ALIGNMENT_CENTER |
+| infoTextTypeface | Custom typeface for info text | Typeface.DEFAULT |
+| infoCardBackgroundColor | Info CardView background color | Inherit from active theme |
+| isHelpIconEnabled | Whether to show the help icon in Info CardView | true |
+| helpIconColor | Tint help Icon | Black |
+| helpIconResource | Custom drawable Resource for help icon | NA |
+| helpIconDrawable | Custom drawable for help icon | NA |
+| infoCustomView | Custom view to be displayed inside info CardView | NA |
+| infoCustomViewRes | Custom layout resource id to be inflated inside CardView | NA |
 | isDotViewEnabled | Whether to show a dot at the centre of focus view | true |
 | isDotAnimationEnabled | Whether to zoom-in and zoom-out dot icon periodically | true |
-| viewId | Unique ID of View so that MIV Doesn't show again 2nd time onwards | NA |
-| shapeType | ShapeType.CIRCLE or ShapeType.RECTANGLE | ShapeType.CIRCLE |
-| dotIconColor | Tint Dot Icon | White |
-| helpIconColor | Tint help Icon | Black |
-| cardBackgroundColor | Info CardView Background Color | White |
+| dotIconColor | Tint Dot Icon | textColorPrimaryInverse |
+| viewId | Unique ID of View so that MIV doesn't show again 2nd time onwards (if showOnlyOnce is enabled) | NA |
+| targetView | View to be focused on | NA |
 | isPerformClick | Click on the focused view when dismissing | false |
-| materialIntroListener | Callback when user dismisses a view | NA |
+| showOnlyOnce | MIV should be shown only once | true |
+| userClickAsDisplayed | MIV should be set as displayed only when user dismisses MIV manually, else MIV will be set as displayed as soon as it is rendered | true |
+| shapeType | ShapeType.CIRCLE or ShapeType.RECTANGLE | ShapeType.CIRCLE |
 | customShape | Use custom shape (Usage to be updated) | NA |
+| materialIntroListener | Callback when user dismisses a view or it is not shown because it was set as displayed | NA |
 
-# Methods
-| Method        | Description                    |
-|-------------|--------------------------------|
-| setInfoTextColor(Int) | set text color of info text |
-| setInfoText(CharSequence) | Set text of info text |
-| setInfoTextSize(Float) | Set text size in sp for info text|
+# Listener
+In your activity/fragment:
+```kotlin
+class GravityFragment : Fragment(), MaterialIntroListener {
+// onUserClick is true when MIV has been dismissed through user click, false when MIV was previously displayed and was set as saved
+override fun onIntroDone(onUserClick: Boolean, viewId: String) {
+   // your action here
+  }
+...
+}
+```
 
 # Configuration Method
-## Incomplete yet
 ```kotlin
-//Create global config instance to not write same config to builder
-//again and again.
+//Create global config instance to not write same config again and again.
 val config = MaterialIntroConfiguration().apply {
-setDelayMillis(1000)
-setFadeAnimationEnabled(true)
-}
+      maskColor = Color.BLUE
+      delayMillis = 300
+
+      isFadeInAnimationEnabled = true
+      isFadeOutAnimationEnabled = true
+      fadeAnimationDurationMillis = 300
+
+      focusType = Focus.ALL
+      focusGravity = FocusGravity.CENTER
+
+      padding = 24 // in px
+
+      dismissOnTouch = false
+
+      isInfoEnabled = true
+      infoText = ""
+      infoTextColor = Color.BLACK
+      infoTextSize = 18f
+      infoTextAlignment = View.TEXT_ALIGNMENT_CENTER
+      infoTextTypeface = Typeface.DEFAULT_BOLD
+      infoCardBackgroundColor = Color.WHITE
+
+      isHelpIconEnabled = true
+      helpIconResource = R.drawable.your_icon
+      helpIconDrawable = yourDrawable
+      helpIconColor = Color.RED
+
+      infoCustomView = yourViewHere
+      infoCustomViewRes = R.layout.your_custom_view_here
+
+      isDotViewEnabled = true
+      isDotAnimationEnabled = true
+      dotIconColor = Color.WHITE
+
+      viewId = "unique_id
+      targetView = viewToBeFocusedHere
+
+      isPerformClick = false
+
+      showOnlyOnce = true
+      userClickAsDisplayed = true
+
+      shapeType = ShapeType.CIRCLE
 ...
-materialInfoViewBuilder.setConfiguration(config)
+}
+materialIntro(config = config) {
 ```
 
 # Use Custom Shapes
@@ -111,8 +198,6 @@ class MyShape: Shape {
 ![Alt text](/art/art_focus_normal.png?raw=true)
 ![Alt text](/art/art_gravity_left.png?raw=true)
 ![Alt text](/art/art_rectangle.png?raw=true)
-# TODO
-> To Be Updated
 
 # Authors
 
