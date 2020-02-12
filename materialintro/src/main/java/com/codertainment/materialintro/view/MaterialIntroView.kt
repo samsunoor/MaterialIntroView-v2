@@ -394,6 +394,11 @@ class MaterialIntroView : RelativeLayout {
   var targetView
     get() = myTargetView.view
     set(value) {
+      if (value.tag is String) {
+        value.tag?.toString()?.let {
+          viewId = it
+        }
+      }
       myTargetView = ViewTarget(value)
     }
 

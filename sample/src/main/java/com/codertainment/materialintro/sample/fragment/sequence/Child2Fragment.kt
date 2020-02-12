@@ -30,7 +30,6 @@ class Child2Fragment : Fragment() {
           add(
             MaterialIntroConfiguration(
               shapeType = ShapeType.RECTANGLE,
-              viewId = "c2_b1",
               targetView = child2_button1,
               infoText = "This is intro for Child2's Button1"
             )

@@ -1,4 +1,4 @@
-# MaterialIntroView [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.0.1) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.0.1/link)![](https://img.shields.io/badge/Min%20SDK-21-blueviolet)
+# MaterialIntroView [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.0.2) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.0.2/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
 
 Beautiful and highly customisable material-design based android library to help your users get started with your awesome app!
 Based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
@@ -17,8 +17,8 @@ Modifications/additions from the base lib:
 - [x] Enhanced MaterialIntroListener, know when user has clicked or MIV was dismissed because it was set as saved
 - [x] Add option (userClickAsDisplayed) to set view intro as displayed only if user clicks on target view or outside too (if dismissOnTouch is enabled)
 - [x] More kotlin friendly
-- [ ] Add Sequence
-- [ ] Singleton-based approach for unified experience across your app
+- [x] Add Sequence
+- [x] Singleton-based approach for unified experience across your app
 - [x] Bug fixes
 
 
@@ -43,7 +43,7 @@ allProjects {
 ```groovy
 dependencies {
   ...
-  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.1'
+  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.2'
 }
 ```
 ### Through JitPack
@@ -62,7 +62,7 @@ allProjects {
 ```groovy
 dependencies {
   ...
-  implementation 'com.github.shripal17:MaterialIntroView-v2:2.0.1'
+  implementation 'com.github.shripal17:MaterialIntroView-v2:2.0.2'
 }
 ```
 
