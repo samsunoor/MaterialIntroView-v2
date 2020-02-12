@@ -22,7 +22,7 @@ class CustomInfoViewFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     custom_view_res_button.setOnClickListener {
-      requireActivity().materialIntro(true) {
+      materialIntro(true) {
         isDotViewEnabled = false
         infoCustomViewRes = R.layout.info_custom_view
         showOnlyOnce = false
@@ -38,7 +38,7 @@ class CustomInfoViewFragment : Fragment() {
       shapeType = ShapeType.RECTANGLE
     }
     custom_view_button.setOnClickListener {
-      requireActivity().materialIntro(true, config) {}
+      materialIntro(true, config) {}
     }
   }
 }

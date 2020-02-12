@@ -7,7 +7,7 @@ bintray {
         repo = 'codertainment'
         name = 'materialintroview-v2'
         userOrg = 'shripal17'
-        vcsUrl = 'https://github.com/shripal17/MaterialIntroView.git'
+        vcsUrl = 'https://github.com/shripal17/MaterialIntroView-v2.git'
         licenses = ['Apache-2.0']
         desc = 'Beautiful and highly customisable Android Library to help your users get started with your awesome app!'
         version {

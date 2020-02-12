@@ -17,6 +17,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.R
 import com.codertainment.materialintro.animation.AnimationFactory
@@ -645,9 +646,29 @@ class MaterialIntroView : RelativeLayout {
 
 fun Activity.materialIntro(show: Boolean = false, config: MaterialIntroConfiguration? = null, func: MaterialIntroView.() -> Unit): MaterialIntroView =
   MaterialIntroView(this).apply {
-    func()
+    if (this@materialIntro is MaterialIntroListener) {
+      materialIntroListener = this@materialIntro
+    }
     withConfig(config)
+    func()
     if (show) {
       show(this@materialIntro)
     }
   }
+
+fun Fragment.materialIntro(show: Boolean = false, config: MaterialIntroConfiguration? = null, func: MaterialIntroView.() -> Unit): MaterialIntroView? {
+  return if (activity == null) null
+  else MaterialIntroView(activity!!).apply {
+    if (activity is MaterialIntroListener) {
+      materialIntroListener = activity as MaterialIntroListener
+    }
+    if (this@materialIntro is MaterialIntroListener) {
+      materialIntroListener = this@materialIntro
+    }
+    withConfig(config)
+    func()
+    if (show) {
+      show(activity!!)
+    }
+  }
+}

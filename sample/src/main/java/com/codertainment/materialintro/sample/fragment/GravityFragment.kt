@@ -1,69 +1,52 @@
 package com.codertainment.materialintro.sample.fragment
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.animation.MaterialIntroListener
 import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.shape.Focus
 import com.codertainment.materialintro.shape.FocusGravity
-import com.codertainment.materialintro.view.MaterialIntroView
+import com.codertainment.materialintro.view.materialIntro
+import kotlinx.android.synthetic.main.fragment_gravity.*
+import org.jetbrains.anko.support.v4.toast
 
-/**
- * Created by mertsimsek on 31/01/16.
- */
 class GravityFragment : Fragment(), MaterialIntroListener {
 
-  private lateinit var cardView1: CardView
-  private lateinit var cardView2: CardView
-  private lateinit var cardView3: CardView
-
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    val view = inflater.inflate(R.layout.fragment_gravity, container, false)
-    cardView1 = view.findViewById(R.id.my_card)
-    cardView2 = view.findViewById(R.id.my_card2)
-    cardView3 = view.findViewById(R.id.my_card3)
-    showIntro(cardView1, INTRO_CARD1, "This intro focuses on RIGHT", FocusGravity.RIGHT, View.TEXT_ALIGNMENT_VIEW_END)
-    return view
+    return inflater.inflate(R.layout.fragment_gravity, container, false)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    showIntro(my_card, INTRO_CARD1, "This intro focuses on RIGHT of target with text alignment", FocusGravity.RIGHT, View.TEXT_ALIGNMENT_VIEW_END)
   }
 
   override fun onIntroDone(onUserClick: Boolean, viewId: String) {
-    if (viewId === INTRO_CARD1) showIntro(
-      cardView2,
-      INTRO_CARD2,
-      "This intro focuses on CENTER.",
-      FocusGravity.CENTER,
-      View.TEXT_ALIGNMENT_CENTER
-    )
-    if (viewId === INTRO_CARD2) showIntro(
-      cardView3,
-      INTRO_CARD3,
-      "This intro focuses on LEFT.",
-      FocusGravity.LEFT,
-      View.TEXT_ALIGNMENT_VIEW_START
-    )
+    when {
+      viewId == INTRO_CARD1 -> {
+        showIntro(my_card2, INTRO_CARD2, "This intro focuses on CENTER of target", FocusGravity.CENTER, View.TEXT_ALIGNMENT_CENTER)
+      }
+      viewId == INTRO_CARD2 -> {
+        showIntro(my_card3, INTRO_CARD3, "This intro focuses on LEFT of target", FocusGravity.LEFT, View.TEXT_ALIGNMENT_VIEW_START)
+      }
+      onUserClick -> {
+        toast("Focus tutorial done")
+      }
+    }
   }
 
   private fun showIntro(view: View, id: String, text: String, focusGravity: FocusGravity, textAlignment: Int) {
-    if (activity == null) return
-    MaterialIntroView(requireActivity()).apply {
-      isDotAnimationEnabled = true
+    materialIntro(true) {
       this.focusGravity = focusGravity
       focusType = Focus.MINIMUM
-      delayMillis = 200
-      isFadeInAnimationEnabled = true
-      isFadeOutAnimationEnabled = true
       isPerformClick = true
       infoText = text
       targetView = view
       infoTextAlignment = textAlignment
-      materialIntroListener = this@GravityFragment
       viewId = id
-      show(requireActivity())
     }
   }
 

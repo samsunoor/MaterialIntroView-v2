@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.codertainment.materialintro.sample.fragment.*
+import com.codertainment.materialintro.sample.fragment.sequence.SequenceParentFragment
+import com.codertainment.materialintro.sequence.MaterialIntroSequence
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       R.id.nav_focus -> FocusFragment()
       R.id.nav_recyclerview -> RecyclerViewFragment()
       R.id.nav_custom_view -> CustomInfoViewFragment()
+      R.id.nav_sequence -> SequenceParentFragment()
       else -> null
     }
     if (item.itemId == R.id.nav_toolbar) {

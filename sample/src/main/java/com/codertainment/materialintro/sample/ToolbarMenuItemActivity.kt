@@ -7,20 +7,16 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.codertainment.materialintro.animation.MaterialIntroListener
-import com.codertainment.materialintro.sample.fragment.FocusFragment
-import com.codertainment.materialintro.sample.fragment.GravityFragment
-import com.codertainment.materialintro.sample.fragment.MainFragment
-import com.codertainment.materialintro.sample.fragment.RecyclerViewFragment
+import com.codertainment.materialintro.sample.fragment.*
 import com.codertainment.materialintro.shape.Focus
-import com.codertainment.materialintro.shape.FocusGravity
 import com.codertainment.materialintro.view.materialIntro
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_toolbar.*
+import org.jetbrains.anko.toast
 
 /**
  * This activity demonstrates how to implement Material introView on ToolBar MenuItems
@@ -74,6 +70,7 @@ class ToolbarMenuItemActivity : AppCompatActivity(), NavigationView.OnNavigation
       R.id.nav_gravity -> GravityFragment()
       R.id.nav_focus -> FocusFragment()
       R.id.nav_recyclerview -> RecyclerViewFragment()
+      R.id.nav_custom_view -> CustomInfoViewFragment()
       else -> null
     }
     if (item.itemId == R.id.nav_toolbar) {
@@ -95,20 +92,13 @@ class ToolbarMenuItemActivity : AppCompatActivity(), NavigationView.OnNavigation
    */
   private fun showIntro(view: View, id: String, text: String) {
     materialIntro(true) {
-      isDotAnimationEnabled = true
-      focusGravity = FocusGravity.CENTER
       focusType = Focus.MINIMUM
-      delayMillis = 100
-      fadeAnimationDurationMillis = 200
-      isFadeInAnimationEnabled = true
-      isFadeOutAnimationEnabled = true
       infoCardBackgroundColor = Color.RED
       dotIconColor = Color.GREEN
       helpIconColor = Color.BLUE
       isPerformClick = true
       infoText = text
       targetView = view
-      materialIntroListener = this@ToolbarMenuItemActivity
       viewId = id
       helpIconResource = R.drawable.icon_miv
     }
@@ -126,7 +116,7 @@ class ToolbarMenuItemActivity : AppCompatActivity(), NavigationView.OnNavigation
         MENU_SHARED_ID_TAG,
         getString(R.string.guide_setup_profile)
       )
-      MENU_SHARED_ID_TAG -> if (onUserClick) Toast.makeText(this@ToolbarMenuItemActivity, "Complete!", Toast.LENGTH_SHORT).show()
+      MENU_SHARED_ID_TAG -> if (onUserClick) toast("Complete!")
     }
   }
 
