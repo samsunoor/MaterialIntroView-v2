@@ -26,6 +26,7 @@ Modifications/additions from the base lib:
 <img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView/master/art/materialintroviewgif.gif"/>
 
 # Import
+### Through bintray
 1. Add to project-level build.gradle
 ```groovy
 buildscript {
@@ -35,7 +36,6 @@ allProjects {
   repositories {
     ...
     maven { url "https://dl.bintray.com/shripal17/codertainment" }
-    // or maven { url "https://jitpack.io" }
   }
 }
 ```
@@ -43,7 +43,26 @@ allProjects {
 ```groovy
 dependencies {
   ...
-  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.0'
+  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.1'
+}
+```
+### Through JitPack
+```groovy
+buildscript {
+  ...
+}
+allProjects {
+  repositories {
+    ...
+    maven { url "https://jitpack.io" }
+  }
+}
+```
+2. Add to module-level build.gradle
+```groovy
+dependencies {
+  ...
+  implementation 'com.github.shripal17:MaterialIntroView-v2:2.0.1'
 }
 ```
 
