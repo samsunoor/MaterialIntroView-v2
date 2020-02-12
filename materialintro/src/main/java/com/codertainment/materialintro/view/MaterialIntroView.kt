@@ -409,6 +409,10 @@ class MaterialIntroView : RelativeLayout {
    * @param activity
    */
   fun show(activity: Activity) {
+    if (preferencesManager.isDisplayed(viewId)) {
+      materialIntroListener?.onIntroDone(false, viewId)
+      return
+    }
     if (!::targetShape.isInitialized) {
       targetShape = when {
         customShape != null -> {
@@ -465,10 +469,6 @@ class MaterialIntroView : RelativeLayout {
       }
     }
 
-    if (preferencesManager.isDisplayed(viewId)) {
-      materialIntroListener?.onIntroDone(false, viewId)
-      return
-    }
     (activity.window.decorView as ViewGroup).addView(this)
     isReady = true
     myHandler.postDelayed(

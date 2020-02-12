@@ -74,8 +74,7 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
   private fun nextIntro() {
     if (counter < mivs.size) {
       isMivShowing = true
-      mivs[counter].show(activity)
-      counter++
+      mivs[counter++].show(activity)
     }
   }
 }

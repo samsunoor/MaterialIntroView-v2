@@ -1,4 +1,4 @@
-# MaterialIntroView [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.0.2) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.0.2/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
+# MaterialIntroView [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.0.3) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.0.3/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
 
 Beautiful and highly customisable material-design based android library to help your users get started with your awesome app!
 Based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
@@ -43,7 +43,7 @@ allProjects {
 ```groovy
 dependencies {
   ...
-  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.2'
+  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.3'
 }
 ```
 ### Through JitPack
@@ -62,7 +62,7 @@ allProjects {
 ```groovy
 dependencies {
   ...
-  implementation 'com.github.shripal17:MaterialIntroView-v2:2.0.2'
+  implementation 'com.github.shripal17:MaterialIntroView-v2:2.0.3'
 }
 ```
 
