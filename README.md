@@ -31,11 +31,11 @@ Modifications/additions from the base lib:
 1. Add to project-level build.gradle
 ```groovy
 buildscript {
-//  ...
+  //...
 }
 allProjects {
   repositories {
-//    ...
+    //...
     maven { url "https://dl.bintray.com/shripal17/codertainment" }
   }
 }
@@ -43,18 +43,18 @@ allProjects {
 2. Add to module-level build.gradle
 ```groovy
 dependencies {
-//  ...
+  //...
   implementation 'com.codertainment.materialintro:materialintroview-v2:2.1.0'
 }
 ```
 ### Through JitPack
 ```groovy
 buildscript {
-//  ...
+  //...
 }
 allProjects {
   repositories {
-//    ...
+    //...
     maven { url "https://jitpack.io" }
   }
 }
@@ -62,7 +62,7 @@ allProjects {
 2. Add to module-level build.gradle
 ```groovy
 dependencies {
-//  ...
+  //...
   implementation 'com.github.shripal17:MaterialIntroView-v2:2.1.0'
 }
 ```
@@ -125,18 +125,18 @@ miv.show(activity)
 |delayMillis  | Delay in ms for MIV (MaterialIntroView) to be shown  | 500 |
 | isFadeInAnimationEnabled | Enable fade-in animation for MIV | true |
 | isFadeOutAnimationEnabled | Enable fade-out animation for MIV | true |
-|focusGravity | FocusGravity.CENTER, FocusGravity.LEFT or FocusGravity.RIGHT | FocusGravity.CENTER |
-| focusType | Focus.ALL, Focus.MINIMUM or Focus.NORMAL | Focus.NORMAL|
+|focusGravity | `FocusGravity.CENTER`, `FocusGravity.LEFT` or `FocusGravity.RIGHT` | `FocusGravity.CENTER` |
+| focusType | `Focus.ALL`, `Focus.MINIMUM` or `Focus.NORMAL` | `Focus.NORMAL` |
 | padding | Padding (in px) for focusing the target view | 10 |
-| dismissOnTouch | Dissmiss intro when user touches anywhere | false |
+| dismissOnTouch | Dismiss intro when user touches anywhere | false |
 | isInfoEnabled | Whether to show info CardView | true |
 | infoText | Text (CharSequence) to be displayed in info CardView | "" |
-| infoTextColor | Text Color for info text | textColorPrimary |
+| infoTextColor | Text Color for info text | `textColorPrimary` |
 | infoTextSize | Text size in sp for info text | 16sp |
-| infoTextAlignment | Text alignment for info text | View.TEXT_ALIGNMENT_CENTER |
-| infoTextTypeface | Custom typeface for info text | Typeface.DEFAULT |
+| infoTextAlignment | Text alignment for info text | `View.TEXT_ALIGNMENT_CENTER` |
+| infoTextTypeface | Custom typeface for info text | `Typeface.DEFAULT` |
 | infoCardBackgroundColor | Info CardView background color | Inherit from active theme |
-| isHelpIconEnabled | Whether to show the help icon in Info CardView | true |
+| isHelpIconEnabled | Whether to show the help icon in Info CardView | `true` |
 | helpIconColor | Tint help Icon | Black |
 | helpIconResource | Custom drawable Resource for help icon | NA |
 | helpIconDrawable | Custom drawable for help icon | NA |
@@ -144,21 +144,21 @@ miv.show(activity)
 | infoCustomViewRes | Custom layout resource id to be inflated inside CardView | NA |
 | isDotViewEnabled | Whether to show a dot at the centre of focus view | true |
 | isDotAnimationEnabled | Whether to zoom-in and zoom-out dot icon periodically | true |
-| dotIconColor | Tint Dot Icon | textColorPrimaryInverse |
-| viewId | Unique ID of View so that MIV doesn't show again 2nd time onwards (if showOnlyOnce is enabled) | Automatically picked from view's `tag` |
+| dotIconColor | Tint Dot Icon | `textColorPrimaryInverse` |
+| viewId | Unique ID of View so that MIV doesn't show again 2nd time onwards (if `showOnlyOnce` is enabled) | Automatically picked from view's `tag` |
 | targetView | View to be focused on | NA |
 | isPerformClick | Click on the focused view when dismissing | false |
 | showOnlyOnce | MIV should be shown only once | true |
 | userClickAsDisplayed | MIV should be set as displayed only when user dismisses MIV manually, else MIV will be set as displayed as soon as it is rendered | true |
-| shapeType | ShapeType.CIRCLE or ShapeType.RECTANGLE | ShapeType.CIRCLE |
+| shapeType | `ShapeType.CIRCLE` or `ShapeType.RECTANGLE` | `ShapeType.CIRCLE` |
 | customShape | Use custom shape (Usage to be updated) | NA |
-| materialIntroListener | Callback when user dismisses a view or it is not shown because it was set as displayed | NA |
+| materialIntroListener | Callback when user dismisses a view or it is not shown because it was set as displayed | Current activity/fragment if it implements `MaterialIntroListener` |
 
 # Listener
 In your activity/fragment:
 ```kotlin
 class GravityFragment : Fragment(), MaterialIntroListener {
-// onUserClick is true when MIV has been dismissed through user click, false when MIV was previously displayed and was set as saved
+  // onUserClick is true when MIV has been dismissed through user click, false when MIV was previously displayed and was set as saved
   override fun onIntroDone(onUserClick: Boolean, viewId: String) {
     // your action here
   }
@@ -213,7 +213,6 @@ val config = MaterialIntroConfiguration().apply {
       userClickAsDisplayed = true
 
       shapeType = ShapeType.CIRCLE
-//...
 }
 materialIntro(config = config)
 ```
@@ -267,38 +266,40 @@ class YourFragment: Fragment(), MaterialIntroSequenceListener {
 # Use Custom Shapes
 You can use your own highlight shapes if Circle and Rectangle do not work for you. See source for `Circle` and `Rect` for implementation example.
 > TODO update doc
-```kotlin
-class MyShape: Shape {
-    // ... your implementation
-}
-
-//... in your app code
-
-setCustomShape(shape)
-
-```
 
 # More Screenshots
-![Default config](/art/home.png?raw=true)
-![Right align gravity](/art/gravity.png?raw=true)
-![Focus All](/art/focus_all.png?raw=true)
-![Focus Minimum](/art/focus_min.png?raw=true)
-![Focus Normal](/art/focus_normal.png?raw=true)
-![RecyclerView item](/art/recycler.png?raw=true)
-![Toolbar Item with sequence and custom colors](/art/toolbar_item_custom_colors.png?raw=true)
-![Custom View using resource layout](/art/custom_view_res.png?raw=true)
-![Custom View at runtime](/art/custom_view.png?raw=true)
-![Sequence with multiple fragments](/art/sequence_multiple_fragments.png?raw=true)
-![Whole Video](/art/materialintroviewgif.gif?raw=true)
-# Authors
+| Default config | Right align gravity | RecyclerView item |
+|----------------|---------------------|-------------------|
+| ![Default config](/art/home.png?raw=true) | ![Right align gravity](/art/gravity.png?raw=true) | ![RecyclerView item](/art/recycler.png?raw=true) |
 
+| Focus All | Focus Minimum | Focus Normal |
+|----------------|---------------------|-------------------|
+| ![Focus All](/art/focus_all.png?raw=true) | ![Focus Minimum](/art/focus_min.png?raw=true) | ![Focus Normal](/art/focus_normal.png?raw=true) |
+
+| Toolbar Item with sequence and custom colors | Custom Info View using resource layout | Custom Info View at runtime |
+|----------------|---------------------|-------------------|
+| ![Toolbar Item with sequence and custom colors](/art/toolbar_item_custom_colors.png?raw=true) | ![Custom Info View using resource layout](/art/custom_view_res.png?raw=true) | ![Custom Info View at runtime](/art/custom_view.png?raw=true) |
+
+| Sequence with multiple fragments |
+|----------------|
+| ![Sequence with multiple fragments](/art/sequence_multiple_fragments.png?raw=true) |
+
+# Full Demo GIF
+![Whole Video](/art/materialintroviewgif.gif?raw=true)
+
+# Authors
 [Mert SIMSEK](https://github.com/iammert)
 
 [Murat Can BUR](https://github.com/muratcanbur)
 
-[shripal17](https://github.com/shripal17)
+[Shripal Jain (Me)](https://github.com/shripal17)
 
-License
+# Showcase
+Apps using this library
+Create a new issue to add your app here
+- [Portal Controller](https://play.google.com/store/apps/details?id=com.portalcomputainment.android.controller.client)
+
+# License
 --------
 
 
