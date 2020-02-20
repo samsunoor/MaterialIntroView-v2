@@ -24,6 +24,7 @@ class Child2Fragment : Fragment() {
   override fun onResume() {
     super.onResume()
     Log.d("child2", "onResume")
+    //delay to let viewpager switch to this fragment completely
     Handler().postDelayed(
       {
         materialIntroSequence {
@@ -46,5 +47,4 @@ class Child2Fragment : Fragment() {
       }, 500
     )
   }
-
 }

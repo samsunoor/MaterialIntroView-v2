@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.sequence.MaterialIntroSequenceListener
@@ -43,6 +44,19 @@ class SequenceParentFragment : Fragment(), MaterialIntroSequenceListener {
 
     Log.d("parent", "onViewCreated")
     sequence_parent_view_pager.adapter = TabsAdapter()
+    sequence_parent_view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+      override fun onPageScrollStateChanged(state: Int) {
+
+      }
+
+      override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+      }
+
+      override fun onPageSelected(position: Int) {
+        sequence_parent_tabs.selectTab(sequence_parent_tabs.getTabAt(position))
+      }
+    })
     sequence_parent_tabs.addOnTabSelectedListener(onTabSelectedListener)
 
     materialIntroSequence(1000, this) {

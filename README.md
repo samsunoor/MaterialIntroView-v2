@@ -1,4 +1,4 @@
-# MaterialIntroView [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.0.3) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.0.3/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
+# MaterialIntroView [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.1.0) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.1.0/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
 
 Beautiful and highly customisable material-design based android library to help your users get started with your awesome app!
 Based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
@@ -20,21 +20,22 @@ Modifications/additions from the base lib:
 - [x] Add Sequence
 - [x] Singleton-based approach for unified experience across your app
 - [x] Bug fixes
+- [ ] Add skip button
 
 
 # Screenshot
-<img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView/master/art/materialintroviewgif.gif"/>
+<img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView-v2/master/art/home.png"/>
 
 # Import
 ### Through bintray
 1. Add to project-level build.gradle
 ```groovy
 buildscript {
-  ...
+//  ...
 }
 allProjects {
   repositories {
-    ...
+//    ...
     maven { url "https://dl.bintray.com/shripal17/codertainment" }
   }
 }
@@ -42,18 +43,18 @@ allProjects {
 2. Add to module-level build.gradle
 ```groovy
 dependencies {
-  ...
-  implementation 'com.codertainment.materialintro:materialintroview-v2:2.0.3'
+//  ...
+  implementation 'com.codertainment.materialintro:materialintroview-v2:2.1.0'
 }
 ```
 ### Through JitPack
 ```groovy
 buildscript {
-  ...
+//  ...
 }
 allProjects {
   repositories {
-    ...
+//    ...
     maven { url "https://jitpack.io" }
   }
 }
@@ -61,13 +62,12 @@ allProjects {
 2. Add to module-level build.gradle
 ```groovy
 dependencies {
-  ...
-  implementation 'com.github.shripal17:MaterialIntroView-v2:2.0.3'
+//  ...
+  implementation 'com.github.shripal17:MaterialIntroView-v2:2.1.0'
 }
 ```
 
-# Usage in Activity/Fragment
-Use `activity?.materialIntro` in fragments
+# Single Usage in Activity/Fragment
 ```kotlin
 val miv = materialIntro(show = true /* if you want to show miv instantly */) {
       maskColor = Color.BLUE
@@ -85,7 +85,7 @@ val miv = materialIntro(show = true /* if you want to show miv instantly */) {
       dismissOnTouch = false
 
       isInfoEnabled = true
-      infoText = ""
+      infoText = "Hello this is help message"
       infoTextColor = Color.BLACK
       infoTextSize = 18f
       infoTextAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -104,7 +104,7 @@ val miv = materialIntro(show = true /* if you want to show miv instantly */) {
       isDotAnimationEnabled = true
       dotIconColor = Color.WHITE
 
-      viewId = "unique_id"
+      viewId = "unique_id" // or automatically picked from view's tag
       targetView = viewToBeFocusedHere
 
       isPerformClick = false
@@ -145,7 +145,7 @@ miv.show(activity)
 | isDotViewEnabled | Whether to show a dot at the centre of focus view | true |
 | isDotAnimationEnabled | Whether to zoom-in and zoom-out dot icon periodically | true |
 | dotIconColor | Tint Dot Icon | textColorPrimaryInverse |
-| viewId | Unique ID of View so that MIV doesn't show again 2nd time onwards (if showOnlyOnce is enabled) | NA |
+| viewId | Unique ID of View so that MIV doesn't show again 2nd time onwards (if showOnlyOnce is enabled) | Automatically picked from view's `tag` |
 | targetView | View to be focused on | NA |
 | isPerformClick | Click on the focused view when dismissing | false |
 | showOnlyOnce | MIV should be shown only once | true |
@@ -159,10 +159,10 @@ In your activity/fragment:
 ```kotlin
 class GravityFragment : Fragment(), MaterialIntroListener {
 // onUserClick is true when MIV has been dismissed through user click, false when MIV was previously displayed and was set as saved
-override fun onIntroDone(onUserClick: Boolean, viewId: String) {
-   // your action here
+  override fun onIntroDone(onUserClick: Boolean, viewId: String) {
+    // your action here
   }
-...
+  //...
 }
 ```
 
@@ -185,7 +185,7 @@ val config = MaterialIntroConfiguration().apply {
       dismissOnTouch = false
 
       isInfoEnabled = true
-      infoText = ""
+      infoText = "Hello this is help message"
       infoTextColor = Color.BLACK
       infoTextSize = 18f
       infoTextAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -204,7 +204,7 @@ val config = MaterialIntroConfiguration().apply {
       isDotAnimationEnabled = true
       dotIconColor = Color.WHITE
 
-      viewId = "unique_id
+      viewId = "unique_id" // or automatically picked from view's tag
       targetView = viewToBeFocusedHere
 
       isPerformClick = false
@@ -213,11 +213,57 @@ val config = MaterialIntroConfiguration().apply {
       userClickAsDisplayed = true
 
       shapeType = ShapeType.CIRCLE
-...
+//...
 }
-materialIntro(config = config) {
+materialIntro(config = config)
 ```
+# Sequence (Added in v2.1.0)
+Using MaterialIntroSequence, you can create a flow for intro view easily in your activity/fragments. Suppose your activity has multiple fragments and each fragment has some or the other view on which you want to show MIV but you want a specific sequence to be followed. In such cases, MaterialIntroSequence is your savior!
 
+The usage is quite simple, call the extension function from your activity/fragment and add MaterialIntroConfiguration objects to it:
+
+```kotlin
+class YourFragment: Fragment(), MaterialIntroSequenceListener {
+
+  //...
+  
+  override fun onResume() {
+    super.onResume()
+    materialIntroSequence(initialDelay = 1000, materialIntroSequenceListener = this) {
+      add(
+        MaterialIntroConfiguration(
+          viewId = "viewId1",
+          infoText = "Help for viewId1",
+          infoCardBackgroundColor = Color.GREEN,
+          helpIconColor = Color.BLUE,
+          infoTextColor = Color.BLACK,
+          dotIconColor = Color.RED,
+          targetView = view1
+        )
+      )
+      add(
+        MaterialIntroConfiguration(
+          viewId = "viewId2",
+          infoText = "Help for viewId2",
+          infoCardBackgroundColor = Color.GREEN,
+          helpIconColor = Color.BLUE,
+          infoTextColor = Color.BLACK,
+          dotIconColor = Color.RED,
+          targetView = view2
+        )
+      )
+    }
+  }
+  
+  override fun onProgress(onUserClick: Boolean, viewId: String, current: Int, total: Int) {
+    toast("click: $onUserClick\nviewId: $viewId\ncurrent: $current\ntotal: $total")
+  }
+
+  override fun onCompleted() {
+    toast("Tutorial Complete")
+  }
+}
+```
 # Use Custom Shapes
 You can use your own highlight shapes if Circle and Rectangle do not work for you. See source for `Circle` and `Rect` for implementation example.
 > TODO update doc
@@ -228,17 +274,22 @@ class MyShape: Shape {
 
 //... in your app code
 
-.setCustomShape(MyShape shape)
+setCustomShape(shape)
 
 ```
 
-# Demos
-![Alt text](/art/art_drawer.png?raw=true)
-![Alt text](/art/art_focus_all.png?raw=true)
-![Alt text](/art/art_focus_normal.png?raw=true)
-![Alt text](/art/art_gravity_left.png?raw=true)
-![Alt text](/art/art_rectangle.png?raw=true)
-
+# More Screenshots
+![Default config](/art/home.png?raw=true)
+![Right align gravity](/art/gravity.png?raw=true)
+![Focus All](/art/focus_all.png?raw=true)
+![Focus Minimum](/art/focus_min.png?raw=true)
+![Focus Normal](/art/focus_normal.png?raw=true)
+![RecyclerView item](/art/recycler.png?raw=true)
+![Toolbar Item with sequence and custom colors](/art/toolbar_item_custom_colors.png?raw=true)
+![Custom View using resource layout](/art/custom_view_res.png?raw=true)
+![Custom View at runtime](/art/custom_view.png?raw=true)
+![Sequence with multiple fragments](/art/sequence_multiple_fragments.png?raw=true)
+![Whole Video](/art/materialintroviewgif.gif?raw=true)
 # Authors
 
 [Mert SIMSEK](https://github.com/iammert)

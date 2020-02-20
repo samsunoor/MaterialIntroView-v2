@@ -300,29 +300,6 @@ class MaterialIntroView : RelativeLayout {
       xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
       flags = Paint.ANTI_ALIAS_FLAG
     }
-
-    infoView = LayoutInflater.from(context).inflate(R.layout.material_intro_card, null) as RelativeLayout
-    infoCardView = infoView.findViewById(R.id.info_card_view)
-    infoTextView = infoView.findViewById(R.id.info_text)
-    helpIconView = infoView.findViewById(R.id.info_icon)
-
-    dotView = LayoutInflater.from(context).inflate(R.layout.dot_view, null) as ImageView
-
-    dotView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-      override fun onGlobalLayout() {
-        targetShape.reCalculateAll()
-        if (targetShape.point.y != 0 && !isLayoutCompleted) {
-          if (isInfoEnabled) {
-            setInfoLayout()
-          }
-          if (isDotViewEnabled) {
-            setDotViewLayout()
-          }
-          removeOnGlobalLayoutListener(this@MaterialIntroView, this)
-        }
-      }
-    })
   }
 
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -428,6 +405,10 @@ class MaterialIntroView : RelativeLayout {
     }
 
     if (isInfoEnabled) {
+      infoView = LayoutInflater.from(context).inflate(R.layout.material_intro_card, null) as RelativeLayout
+      infoCardView = infoView.findViewById(R.id.info_card_view)
+      infoTextView = infoView.findViewById(R.id.info_text)
+      helpIconView = infoView.findViewById(R.id.info_icon)
       if (infoCustomViewRes != null || infoCustomView != null) {
         infoCustomViewRes?.let {
           infoCustomView = LayoutInflater.from(context).inflate(it, infoCardView, false)
@@ -464,10 +445,27 @@ class MaterialIntroView : RelativeLayout {
     }
 
     if (isDotViewEnabled) {
+      dotView = LayoutInflater.from(context).inflate(R.layout.dot_view, null) as ImageView
+      dotView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
       dotIconColor?.let {
         dotView.setColorFilter(it)
       }
     }
+
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+      override fun onGlobalLayout() {
+        targetShape.reCalculateAll()
+        if (targetShape.point.y != 0 && !isLayoutCompleted) {
+          if (isInfoEnabled) {
+            setInfoLayout()
+          }
+          if (isDotViewEnabled) {
+            setDotViewLayout()
+          }
+          removeOnGlobalLayoutListener(this@MaterialIntroView, this)
+        }
+      }
+    })
 
     (activity.window.decorView as ViewGroup).addView(this)
     isReady = true

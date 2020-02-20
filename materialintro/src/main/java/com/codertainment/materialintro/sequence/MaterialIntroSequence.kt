@@ -1,6 +1,7 @@
 package com.codertainment.materialintro.sequence
 
 import android.app.Activity
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.animation.MaterialIntroListener
@@ -37,6 +38,9 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
   private val preferencesManager by lazy {
     PreferencesManager(activity)
   }
+  private val handler by lazy {
+    Handler()
+  }
 
   private var materialIntroListener = object : MaterialIntroListener {
     override fun onIntroDone(onUserClick: Boolean, viewId: String) {
@@ -53,7 +57,7 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
   /**
    * Delay (in ms) for first MIV to be shown
    */
-  var initialDelay: Long = 200
+  var initialDelay: Long = 500
   var materialIntroSequenceListener: MaterialIntroSequenceListener? = null
 
   fun add(config: MaterialIntroConfiguration) {
@@ -74,7 +78,9 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
   private fun nextIntro() {
     if (counter < mivs.size) {
       isMivShowing = true
-      mivs[counter++].show(activity)
+      handler.post {
+        mivs[counter++].show(activity)
+      }
     }
   }
 }
