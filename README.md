@@ -282,7 +282,7 @@ You can use your own highlight shapes if Circle and Rectangle do not work for yo
 
 | Sequence with multiple fragments |
 |----------------|
-| ![Sequence with multiple fragments](/art/sequence_multiple_fragments.png?raw=true) |
+|<img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView-v2/master/art/sequence_multiple_fragments.png" width="360"/> |
 
 # Full Demo GIF
 ![Whole Video](/art/materialintroviewgif.gif?raw=true)
@@ -296,6 +296,7 @@ You can use your own highlight shapes if Circle and Rectangle do not work for yo
 
 # Showcase
 Apps using this library
+
 Create a new issue to add your app here
 - [Portal Controller](https://play.google.com/store/apps/details?id=com.portalcomputainment.android.controller.client)
 
