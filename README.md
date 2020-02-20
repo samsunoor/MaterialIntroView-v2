@@ -24,7 +24,7 @@ Modifications/additions from the base lib:
 
 
 # Screenshot
-<img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView-v2/master/art/home.png"/>
+<img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView-v2/master/art/home.png" width="360"/>
 
 # Import
 ### Through bintray
