@@ -1,5 +1,4 @@
-# MaterialIntroView [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MaterialIntroView%20v2-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/8059)
- [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.1.0) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.1.0/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
+# MaterialIntroView [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MaterialIntroView%20v2-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/8059) [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.1.0) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.1.0/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
 
 Beautiful and highly customisable material-design based android library to help your users get started with your awesome app!
 Based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
