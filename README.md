@@ -303,7 +303,6 @@ Create a new issue to add your app here
 # License
 --------
 
-
     Copyright 2020 Shripal Jain
 
     Licensed under the Apache License, Version 2.0 (the "License");

@@ -42,6 +42,18 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
     Handler()
   }
 
+  /**
+   * Whether to show the skip button
+   */
+  var showSkip = false
+
+  /**
+   * If enabled, once the user clicks on skip button, all new MIVs will be skipped too
+   * If disabled, even after the user clicks on skip button and new MIVs are added after that, for e.g. for another fragment, the new MIVs will be shown
+   */
+  var persistSkip = false
+  private var isSkipped = false
+
   private var materialIntroListener = object : MaterialIntroListener {
     override fun onIntroDone(onUserClick: Boolean, viewId: String) {
       materialIntroSequenceListener?.onProgress(onUserClick, viewId, counter, mivs.size)
@@ -61,22 +73,50 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
   var materialIntroSequenceListener: MaterialIntroSequenceListener? = null
 
   fun add(config: MaterialIntroConfiguration) {
-    val found = mivs.filter { it.viewId == config.viewId }
-    if (found.isNotEmpty() || preferencesManager.isDisplayed(config.viewId)) return
+    val found = mivs.find { it.viewId == config.viewId || it.viewId == config.targetView?.tag?.toString() }
+    if (found != null && preferencesManager.isDisplayed(config.viewId ?: config.targetView?.tag?.toString())) return
     mivs.add(activity.materialIntro(config = config) {
+      showSkip = this@MaterialIntroSequence.showSkip
       delayMillis = if (mivs.isEmpty()) initialDelay else 0
       materialIntroListener = this@MaterialIntroSequence.materialIntroListener
+      skipButton.setOnClickListener {
+        skip()
+      }
     })
   }
 
+  fun addConfig(func: MaterialIntroConfiguration.() -> Unit) {
+    add(MaterialIntroConfiguration().apply {
+      func()
+    })
+  }
+
+  private fun skip() {
+    isSkipped = true
+    mivs[counter - 1].dismiss()
+    for (i in 0 until mivs.size) {
+      if (mivs[i].showOnlyOnce) {
+        preferencesManager.setDisplayed(mivs[i].viewId)
+      }
+    }
+    counter = mivs.size
+    materialIntroSequenceListener?.onCompleted()
+  }
+
   fun start() {
-    if (!isMivShowing) {
-      nextIntro()
+    if (isSkipped && persistSkip) {
+      skip()
+    } else {
+      if (!isMivShowing) {
+        nextIntro()
+      }
     }
   }
 
   private fun nextIntro() {
-    if (counter < mivs.size) {
+    if (isSkipped && persistSkip) {
+      skip()
+    } else if (counter < mivs.size) {
       isMivShowing = true
       handler.post {
         mivs[counter++].show(activity)
@@ -94,10 +134,16 @@ val Activity.materialIntroSequence
   get() = MaterialIntroSequence.getInstance(this)
 
 fun Activity.materialIntroSequence(
-  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null,
+  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
   func: MaterialIntroSequence.() -> Unit
 ): MaterialIntroSequence {
   return materialIntroSequence.apply {
+    showSkip?.let {
+      this.showSkip = it
+    }
+    persistSkip?.let {
+      this.persistSkip = it
+    }
     initialDelay?.let {
       this.initialDelay = it
     }
@@ -113,10 +159,16 @@ val Fragment.materialIntroSequence
   get() = if (activity != null) MaterialIntroSequence.getInstance(activity!!) else null
 
 fun Fragment.materialIntroSequence(
-  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null,
+  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
   func: MaterialIntroSequence.() -> Unit
 ): MaterialIntroSequence? {
   return materialIntroSequence.apply {
+    showSkip?.let {
+      this?.showSkip = it
+    }
+    persistSkip?.let {
+      this?.persistSkip = it
+    }
     initialDelay?.let {
       this?.initialDelay = it
     }
@@ -126,4 +178,11 @@ fun Fragment.materialIntroSequence(
     this?.func()
     this?.start()
   }
+}
+
+enum class SkipLocation {
+  TOP_RIGHT,
+  TOP_LEFT,
+  BOTTOM_LEFT,
+  BOTTOM_RIGHT
 }

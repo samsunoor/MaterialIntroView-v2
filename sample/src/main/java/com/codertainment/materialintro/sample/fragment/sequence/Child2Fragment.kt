@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.codertainment.materialintro.MaterialIntroConfiguration
-import com.codertainment.materialintro.sample.MainActivity
 import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.sequence.materialIntroSequence
 import com.codertainment.materialintro.shape.ShapeType
@@ -28,21 +26,17 @@ class Child2Fragment : Fragment() {
     Handler().postDelayed(
       {
         materialIntroSequence {
-          add(
-            MaterialIntroConfiguration(
-              shapeType = ShapeType.RECTANGLE,
-              targetView = child2_button1,
-              infoText = "This is intro for Child2's Button1"
-            )
-          )
-          add(
-            MaterialIntroConfiguration(
-              shapeType = ShapeType.RECTANGLE,
-              viewId = "c2_b2",
-              targetView = child2_button2,
-              infoText = "This is intro for Child2's Button2"
-            )
-          )
+          addConfig {
+            shapeType = ShapeType.RECTANGLE
+            targetView = child2_button1
+            infoText = "This is intro for Child2's Button1"
+          }
+          addConfig {
+            shapeType = ShapeType.RECTANGLE
+            viewId = "c2_b2"
+            targetView = child2_button2
+            infoText = "This is intro for Child2's Button2"
+          }
         }
       }, 500
     )

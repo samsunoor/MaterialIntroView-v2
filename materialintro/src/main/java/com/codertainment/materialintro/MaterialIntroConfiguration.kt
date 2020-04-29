@@ -2,17 +2,18 @@ package com.codertainment.materialintro
 
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.view.Gravity
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import com.codertainment.materialintro.animation.MaterialIntroListener
+import com.codertainment.materialintro.sequence.SkipLocation
 import com.codertainment.materialintro.shape.Focus
 import com.codertainment.materialintro.shape.FocusGravity
 import com.codertainment.materialintro.shape.Shape
 import com.codertainment.materialintro.shape.ShapeType
 import com.codertainment.materialintro.utils.Constants
+import com.google.android.material.button.MaterialButton
 
 data class MaterialIntroConfiguration(
   var maskColor: Int = Constants.DEFAULT_MASK_COLOR,
@@ -64,5 +65,9 @@ data class MaterialIntroConfiguration(
 
   var shapeType: ShapeType = ShapeType.CIRCLE,
   var customShape: Shape? = null,
-  var materialIntroListener: MaterialIntroListener? = null
+  var materialIntroListener: MaterialIntroListener? = null,
+
+  var skipLocation: SkipLocation = SkipLocation.BOTTOM_LEFT,
+  var skipText: CharSequence = "Skip",
+  var skipButtonStyling: MaterialButton.() -> Unit = {}
 )

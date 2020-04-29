@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.sequence.MaterialIntroSequenceListener
 import com.codertainment.materialintro.sequence.materialIntroSequence
@@ -59,15 +58,13 @@ class SequenceParentFragment : Fragment(), MaterialIntroSequenceListener {
     })
     sequence_parent_tabs.addOnTabSelectedListener(onTabSelectedListener)
 
-    materialIntroSequence(1000, this) {
-      add(
-        MaterialIntroConfiguration(
-          infoText = "Parent Fragment",
-          shapeType = ShapeType.RECTANGLE,
-          targetView = sequence_parent_fragment_button,
-          viewId = "parent"
-        )
-      )
+    materialIntroSequence(1000, this, showSkip = true, persistSkip = true) {
+      addConfig {
+        infoText = "Parent Fragment"
+        shapeType = ShapeType.RECTANGLE
+        targetView = sequence_parent_fragment_button
+        viewId = "parent"
+      }
     }
   }
 
