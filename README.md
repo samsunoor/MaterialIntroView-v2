@@ -20,7 +20,7 @@ Modifications/additions from the base lib:
 - [x] Add Sequence
 - [x] Singleton-based approach for unified experience across your app
 - [x] Bug fixes
-- [ ] Add skip button
+- [x] Add skip button for sequence (BETA) (Added in v2.1.1)
 
 
 # Screenshot
@@ -44,7 +44,7 @@ allProjects {
 ```groovy
 dependencies {
   //...
-  implementation 'com.codertainment.materialintro:materialintroview-v2:2.1.0'
+  implementation 'com.codertainment.materialintro:materialintroview-v2:2.1.1'
 }
 ```
 ### Through JitPack
@@ -63,7 +63,7 @@ allProjects {
 ```groovy
 dependencies {
   //...
-  implementation 'com.github.shripal17:MaterialIntroView-v2:2.1.0'
+  implementation 'com.github.shripal17:MaterialIntroView-v2:2.1.1'
 }
 ```
 
@@ -130,7 +130,7 @@ miv.show(activity)
 | padding | Padding (in px) for focusing the target view | 10 |
 | dismissOnTouch | Dismiss intro when user touches anywhere | false |
 | isInfoEnabled | Whether to show info CardView | true |
-| infoText | Text (CharSequence) to be displayed in info CardView | "" |
+| infoText | Text (CharSequence) to be displayed in info CardView | Empty Text |
 | infoTextColor | Text Color for info text | `textColorPrimary` |
 | infoTextSize | Text size in sp for info text | 16sp |
 | infoTextAlignment | Text alignment for info text | `View.TEXT_ALIGNMENT_CENTER` |
@@ -153,6 +153,9 @@ miv.show(activity)
 | shapeType | `ShapeType.CIRCLE` or `ShapeType.RECTANGLE` | `ShapeType.CIRCLE` |
 | customShape | Use custom shape (Usage to be updated) | NA |
 | materialIntroListener | Callback when user dismisses a view or it is not shown because it was set as displayed | Current activity/fragment if it implements `MaterialIntroListener` |
+| skipLocation | Location of skip button on the screen `SkipLocation.BOTTOM_LEFT` or `SkipLocation.BOTTOM_RIGHT` or `SkipLocation.TOP_LEFT` or `SkipLocation.TOP_RIGHT` | `SkipLocation.BOTTOM_LEFT` |
+| skipText | Skip Button Text | `"Skip"` |
+| skipButtonStyling | Custom styling to be applied for the skip button (lambda function as member val) | NA |
 
 # Listener
 In your activity/fragment:
@@ -213,6 +216,15 @@ val config = MaterialIntroConfiguration().apply {
       userClickAsDisplayed = true
 
       shapeType = ShapeType.CIRCLE
+      
+      // skip customisations are only used when showSkip = true is set in MaterialIntroSequence
+      skipLocation = SkipLocation.TOP_RIGHT
+      skipText = "Skip"
+      skipButtonStyling = {
+        // apply custom styling for https://material.io/develop/android/components/buttons/ here
+        // strokeWidth = 5
+        // setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+      }
 }
 materialIntro(config = config)
 ```
@@ -228,29 +240,46 @@ class YourFragment: Fragment(), MaterialIntroSequenceListener {
   
   override fun onResume() {
     super.onResume()
-    materialIntroSequence(initialDelay = 1000, materialIntroSequenceListener = this) {
-      add(
-        MaterialIntroConfiguration(
-          viewId = "viewId1",
-          infoText = "Help for viewId1",
-          infoCardBackgroundColor = Color.GREEN,
-          helpIconColor = Color.BLUE,
-          infoTextColor = Color.BLACK,
-          dotIconColor = Color.RED,
-          targetView = view1
-        )
-      )
-      add(
-        MaterialIntroConfiguration(
-          viewId = "viewId2",
-          infoText = "Help for viewId2",
-          infoCardBackgroundColor = Color.GREEN,
-          helpIconColor = Color.BLUE,
-          infoTextColor = Color.BLACK,
-          dotIconColor = Color.RED,
-          targetView = view2
-        )
-      )
+    /**
+     * persistSkip usage:
+     * If enabled, once the user clicks on skip button, all new MIVs will be skipped too
+     * If disabled, even after the user clicks on skip button and new MIVs are added after that, for e.g. for another fragment, the new MIVs will be shown
+     */
+    materialIntroSequence(initialDelay = 1000, materialIntroSequenceListener = this, showSkip = true, persistSkip = true) {
+      addConfig {
+        viewId = "viewId1"
+        infoText = "Help for viewId1"
+        infoCardBackgroundColor = Color.GREEN
+        helpIconColor = Color.BLUE
+        infoTextColor = Color.BLACK
+        dotIconColor = Color.RED
+        targetView = view1
+        
+        skipLocation = SkipLocation.TOP_RIGHT
+        skipText = "Skip"
+        skipButtonStyling = {
+          // apply custom styling for https://material.io/develop/android/components/buttons/ here
+          // strokeWidth = 5
+          // setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        }
+      }
+      addConfig {
+        viewId = "viewId2"
+        infoText = "Help for viewId2"
+        infoCardBackgroundColor = Color.GREEN
+        helpIconColor = Color.BLUE
+        infoTextColor = Color.BLACK
+        dotIconColor = Color.RED
+        targetView = view2
+        
+        skipLocation = SkipLocation.TOP_RIGHT
+        skipText = "Skip"
+        skipButtonStyling = {
+          // apply custom styling for https://material.io/develop/android/components/buttons/ here
+          // strokeWidth = 5
+          // setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        }
+      }
     }
   }
   
