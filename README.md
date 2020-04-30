@@ -27,6 +27,8 @@ Modifications/additions from the base lib:
 # Screenshot
 <img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView-v2/master/art/home.png" width="360"/>
 
+Sample APK can be found in the [Releases Section](https://github.com/shripal17/MaterialIntroView-v2/releases)
+
 # BREAKING
 Upgrading to v2.2.0 will break your imports. This is because I have re-organized the extension methods. Please fix the imports by removing them from the `import` block and re-importing using Android Studio's `Alt+Enter`
 
@@ -72,7 +74,7 @@ dependencies {
 ```
 
 # Changelog
-Please check [Releases](/releases)
+Please check [Releases](https://github.com/shripal17/MaterialIntroView-v2/releases)
 
 # Single Usage in Activity/Fragment
 ```kotlin
