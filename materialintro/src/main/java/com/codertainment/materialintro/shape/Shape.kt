@@ -29,6 +29,7 @@ abstract class Shape @JvmOverloads constructor(
   abstract fun reCalculateAll()
   abstract val point: Point
   abstract val height: Int
+
   /**
    * Determines if a click is on the shape
    * @param x x-axis location of click

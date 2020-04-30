@@ -22,7 +22,9 @@ class Rect : Shape {
   }
 
   override fun draw(canvas: Canvas, eraser: Paint, padding: Int) {
-    canvas.drawRoundRect(adjustedRect, padding.toFloat(), padding.toFloat(), eraser)
+    adjustedRect?.let {
+      canvas.drawRoundRect(it, padding.toFloat(), padding.toFloat(), eraser)
+    }
   }
 
   private fun calculateAdjustedRect() {

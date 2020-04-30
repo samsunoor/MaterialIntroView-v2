@@ -10,13 +10,9 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import com.codertainment.materialintro.MaterialIntroConfiguration
-import com.codertainment.materialintro.animation.MaterialIntroListener
 import com.codertainment.materialintro.sample.fragment.*
 import com.codertainment.materialintro.sequence.MaterialIntroSequenceListener
-import com.codertainment.materialintro.sequence.materialIntroSequence
-import com.codertainment.materialintro.shape.Focus
-import com.codertainment.materialintro.view.materialIntro
+import com.codertainment.materialintro.utils.materialIntroSequence
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_toolbar.*
 import org.jetbrains.anko.toast
@@ -54,40 +50,34 @@ class ToolbarMenuItemActivity : AppCompatActivity(), NavigationView.OnNavigation
     Handler().post {
       helpAction = findViewById(R.id.help)
       shareAction = findViewById(R.id.share)
-      materialIntroSequence(500, this) {
-        add(
-          MaterialIntroConfiguration(
-            viewId = MENU_SEARCH_ID_TAG,
-            infoText = getString(R.string.guide_setup_profile),
-            infoCardBackgroundColor = Color.GREEN,
-            helpIconColor = Color.BLUE,
-            infoTextColor = Color.BLACK,
-            dotIconColor = Color.RED,
-            targetView = findViewById(R.id.search)
-          )
-        )
-        add(
-          MaterialIntroConfiguration(
-            viewId = MENU_SHARED_ID_TAG,
-            infoText = getString(R.string.guide_setup_profile),
-            infoCardBackgroundColor = Color.GREEN,
-            helpIconColor = Color.BLUE,
-            infoTextColor = Color.BLACK,
-            dotIconColor = Color.RED,
-            targetView = shareAction
-          )
-        )
-        add(
-          MaterialIntroConfiguration(
-            viewId = MENU_ABOUT_ID_TAG,
-            infoText = getString(R.string.guide_setup_profile),
-            infoCardBackgroundColor = Color.GREEN,
-            helpIconColor = Color.BLUE,
-            infoTextColor = Color.BLACK,
-            dotIconColor = Color.RED,
-            targetView = helpAction
-          )
-        )
+      materialIntroSequence(500) {
+        addConfig {
+          viewId = MENU_SEARCH_ID_TAG
+          infoText = getString(R.string.guide_setup_profile)
+          infoCardBackgroundColor = Color.GREEN
+          helpIconColor = Color.BLUE
+          infoTextColor = Color.BLACK
+          dotIconColor = Color.RED
+          targetView = findViewById(R.id.search)
+        }
+        addConfig {
+          viewId = MENU_SHARED_ID_TAG
+          infoText = getString(R.string.guide_setup_profile)
+          infoCardBackgroundColor = Color.GREEN
+          helpIconColor = Color.BLUE
+          infoTextColor = Color.BLACK
+          dotIconColor = Color.RED
+          targetView = shareAction
+        }
+        addConfig {
+          viewId = MENU_ABOUT_ID_TAG
+          infoText = getString(R.string.guide_setup_profile)
+          infoCardBackgroundColor = Color.GREEN
+          helpIconColor = Color.BLUE
+          infoTextColor = Color.BLACK
+          dotIconColor = Color.RED
+          targetView = helpAction
+        }
       }
     }
     return true
@@ -125,7 +115,7 @@ class ToolbarMenuItemActivity : AppCompatActivity(), NavigationView.OnNavigation
   }
 
   override fun onProgress(onUserClick: Boolean, viewId: String, current: Int, total: Int) {
-    when(viewId) {
+    when (viewId) {
       MENU_SHARED_ID_TAG -> toast("Share done")
       MENU_ABOUT_ID_TAG -> toast("About done")
       MENU_SEARCH_ID_TAG -> toast("Search done")

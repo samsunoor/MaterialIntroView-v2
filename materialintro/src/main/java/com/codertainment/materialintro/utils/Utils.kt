@@ -2,7 +2,7 @@ package com.codertainment.materialintro.utils
 
 import android.content.res.Resources
 
-object Utils {
+internal object Utils {
   fun pxToDp(px: Int): Int {
     return (px / Resources.getSystem().displayMetrics.density).toInt()
   }

@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.sample.R
-import com.codertainment.materialintro.sequence.materialIntroSequence
 import com.codertainment.materialintro.shape.ShapeType
+import com.codertainment.materialintro.utils.materialIntroSequence
 import kotlinx.android.synthetic.main.fragment_child1.*
 
 class Child1Fragment : Fragment() {

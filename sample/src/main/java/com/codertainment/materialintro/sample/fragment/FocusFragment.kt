@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.sequence.MaterialIntroSequenceListener
-import com.codertainment.materialintro.sequence.materialIntroSequence
 import com.codertainment.materialintro.shape.Focus
+import com.codertainment.materialintro.utils.materialIntroSequence
 import kotlinx.android.synthetic.main.fragment_focus.*
 import org.jetbrains.anko.support.v4.toast
 
@@ -21,7 +21,7 @@ class FocusFragment : Fragment(), MaterialIntroSequenceListener {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    materialIntroSequence(1000, this) {
+    materialIntroSequence(1000) {
       add(materialIntroConfig.apply {
         focusType = Focus.ALL
         infoText = "This intro view focuses on whole of target view"

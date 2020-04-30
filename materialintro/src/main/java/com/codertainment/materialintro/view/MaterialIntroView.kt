@@ -17,20 +17,20 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.cardview.widget.CardView
-import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.R
 import com.codertainment.materialintro.animation.AnimationFactory
 import com.codertainment.materialintro.animation.AnimationListener
 import com.codertainment.materialintro.animation.MaterialIntroListener
-import com.codertainment.materialintro.prefs.PreferencesManager
 import com.codertainment.materialintro.sequence.SkipLocation
 import com.codertainment.materialintro.shape.*
+import com.codertainment.materialintro.shape.Circle
 import com.codertainment.materialintro.shape.Rect
 import com.codertainment.materialintro.target.Target
 import com.codertainment.materialintro.target.ViewTarget
 import com.codertainment.materialintro.utils.Constants
 import com.codertainment.materialintro.utils.Utils
+import com.codertainment.materialintro.utils.preferencesManager
 import com.google.android.material.button.MaterialButton
 
 class MaterialIntroView : RelativeLayout {
@@ -243,15 +243,6 @@ class MaterialIntroView : RelativeLayout {
   var dotIconColor: Int? = null
 
   /**
-   * Save/Retrieve status of MaterialIntroView
-   * If Intro is already learnt then don't show
-   * it again.
-   */
-  private val preferencesManager by lazy {
-    PreferencesManager(context)
-  }
-
-  /**
    * Check using this Id whether user learned
    * or not.
    */
@@ -362,7 +353,7 @@ class MaterialIntroView : RelativeLayout {
     if (bitmap == null) {
       bitmap?.recycle()
       bitmap = Bitmap.createBitmap(myWidth, myHeight, Bitmap.Config.ARGB_8888)
-      this.canvas = Canvas(bitmap)
+      this.canvas = Canvas(bitmap!!)
     }
     /**
      * Draw mask
@@ -373,7 +364,7 @@ class MaterialIntroView : RelativeLayout {
      * Clear focus area
      */
     targetShape.draw(this.canvas!!, eraser, padding)
-    canvas.drawBitmap(bitmap, 0f, 0f, null)
+    canvas.drawBitmap(bitmap!!, 0f, 0f, null)
   }
 
   /**
@@ -434,7 +425,7 @@ class MaterialIntroView : RelativeLayout {
    * @param activity
    */
   fun show(activity: Activity) {
-    if (preferencesManager.isDisplayed(viewId)) {
+    if (context.preferencesManager.isDisplayed(viewId)) {
       materialIntroListener?.onIntroDone(false, viewId)
       return
     }
@@ -542,7 +533,7 @@ class MaterialIntroView : RelativeLayout {
       }, delayMillis
     )
     if (showOnlyOnce && !userClickAsDisplayed) {
-      preferencesManager.setDisplayed(viewId)
+      context.preferencesManager.setDisplayed(viewId)
     }
   }
 
@@ -551,7 +542,7 @@ class MaterialIntroView : RelativeLayout {
    */
   fun dismiss() {
     if (showOnlyOnce && userClickAsDisplayed) {
-      preferencesManager.setDisplayed(viewId)
+      context.preferencesManager.setDisplayed(viewId)
     }
     if (isFadeOutAnimationEnabled) {
       AnimationFactory.animateFadeOut(this, fadeAnimationDurationMillis, object : AnimationListener.OnAnimationEndListener {
@@ -744,35 +735,6 @@ class MaterialIntroView : RelativeLayout {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     fun removeOnGlobalLayoutListener(v: View, listener: ViewTreeObserver.OnGlobalLayoutListener) {
       v.viewTreeObserver.removeOnGlobalLayoutListener(listener)
-    }
-  }
-}
-
-fun Activity.materialIntro(show: Boolean = false, config: MaterialIntroConfiguration? = null, func: MaterialIntroView.() -> Unit): MaterialIntroView =
-  com.codertainment.materialintro.view.MaterialIntroView(this).apply {
-    if (this@materialIntro is MaterialIntroListener) {
-      materialIntroListener = this@materialIntro
-    }
-    withConfig(config)
-    func()
-    if (show) {
-      show(this@materialIntro)
-    }
-  }
-
-fun Fragment.materialIntro(show: Boolean = false, config: MaterialIntroConfiguration? = null, func: MaterialIntroView.() -> Unit): MaterialIntroView? {
-  return if (activity == null) null
-  else MaterialIntroView(activity!!).apply {
-    if (activity is MaterialIntroListener) {
-      materialIntroListener = activity as MaterialIntroListener
-    }
-    if (this@materialIntro is MaterialIntroListener) {
-      materialIntroListener = this@materialIntro
-    }
-    withConfig(config)
-    func()
-    if (show) {
-      show(activity!!)
     }
   }
 }

@@ -1,4 +1,4 @@
-# MaterialIntroView [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MaterialIntroView%20v2-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/8059) [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.1.0) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.1.0/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
+# MaterialIntroView [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MaterialIntroView%20v2-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/8059) [![](https://jitpack.io/v/shripal17/MaterialIntroView-v2.svg)](https://jitpack.io/#shripal17/MaterialIntroView-v2) [ ![Download](https://api.bintray.com/packages/shripal17/codertainment/materialintroview-v2/images/download.svg?version=2.2.0) ](https://bintray.com/shripal17/codertainment/materialintroview-v2/2.2.0/link)![](https://img.shields.io/badge/SDK-21+-blueviolet)
 
 Beautiful and highly customisable material-design based android library to help your users get started with your awesome app!
 Based originally on [iammert/MaterialIntroView](https://github.com/iammert/MaterialIntroView).
@@ -17,14 +17,18 @@ Modifications/additions from the base lib:
 - [x] Enhanced MaterialIntroListener, know when user has clicked or MIV was dismissed because it was set as saved
 - [x] Add option (userClickAsDisplayed) to set view intro as displayed only if user clicks on target view or outside too (if dismissOnTouch is enabled)
 - [x] More kotlin friendly
-- [x] Add Sequence
+- [x] Add Sequence (Added in v2.1.0)
 - [x] Singleton-based approach for unified experience across your app
 - [x] Bug fixes
-- [x] Add skip button for sequence (BETA) (Added in v2.1.1)
+- [x] Add skip button for sequence with custom button attributes / button location using `SkipLocation` (BETA) (Added in v2.1.1)
+- [ ] CircularReveal animation for MIV show/hide
 
 
 # Screenshot
 <img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView-v2/master/art/home.png" width="360"/>
+
+# BREAKING
+Upgrading to v2.2.0 will break your imports. This is because I have re-organized the extension methods. Please fix the imports by removing them from the `import` block and re-importing using Android Studio's `Alt+Enter`
 
 # Import
 ### Through bintray
@@ -44,7 +48,7 @@ allProjects {
 ```groovy
 dependencies {
   //...
-  implementation 'com.codertainment.materialintro:materialintroview-v2:2.1.1'
+  implementation 'com.codertainment.materialintro:materialintroview-v2:2.2.0'
 }
 ```
 ### Through JitPack
@@ -63,9 +67,12 @@ allProjects {
 ```groovy
 dependencies {
   //...
-  implementation 'com.github.shripal17:MaterialIntroView-v2:2.1.1'
+  implementation 'com.github.shripal17:MaterialIntroView-v2:2.2.0'
 }
 ```
+
+# Changelog
+Please check [Releases](/releases)
 
 # Single Usage in Activity/Fragment
 ```kotlin
@@ -161,7 +168,10 @@ miv.show(activity)
 In your activity/fragment:
 ```kotlin
 class GravityFragment : Fragment(), MaterialIntroListener {
-  // onUserClick is true when MIV has been dismissed through user click, false when MIV was previously displayed and was set as saved
+  /**
+   * @param onUserClick is true when MIV has been dismissed through user click, false when MIV was previously displayed and was set as saved
+   * @param viewId Unique ID of the target view
+   */
   override fun onIntroDone(onUserClick: Boolean, viewId: String) {
     // your action here
   }
@@ -241,11 +251,20 @@ class YourFragment: Fragment(), MaterialIntroSequenceListener {
   override fun onResume() {
     super.onResume()
     /**
-     * persistSkip usage:
-     * If enabled, once the user clicks on skip button, all new MIVs will be skipped too
-     * If disabled, even after the user clicks on skip button and new MIVs are added after that, for e.g. for another fragment, the new MIVs will be shown
+    * Create/get MaterialIntroSequence for the current fragment's activity
+     *
+     * If your Activity/Fragment implements MaterialIntroSequenceListener, it is automatically assigned as materialIntroSequenceListener for the current created instance
+     *
+     * @param initialDelay delay for the first MIV to be shown
+     *
+     * @param materialIntroSequenceListener listener for MaterialIntroSequence events
+     *
+     * @param showSkip Whether to show the skip button for MIVs
+     *
+     * @param persistSkip If enabled, once the user clicks on skip button, all new MIVs will be skipped too, else even after the user clicks on skip
+     * button and new MIVs are added after that, for e.g. for another fragment, the new MIVs will be shown
      */
-    materialIntroSequence(initialDelay = 1000, materialIntroSequenceListener = this, showSkip = true, persistSkip = true) {
+    materialIntroSequence(initialDelay = 1000, showSkip = true, persistSkip = true) {
       addConfig {
         viewId = "viewId1"
         infoText = "Help for viewId1"
@@ -283,10 +302,19 @@ class YourFragment: Fragment(), MaterialIntroSequenceListener {
     }
   }
   
+  /**
+   * @param onUserClick if the MIV was dismissed by the user on click or it was auto-dismissed because it was set as displayed
+   * @param viewId viewId for the dismissed MIV
+   * @param current index of the dismissed MIV
+   * @param total Total number of MIVs in the current MaterialIntroSequence
+   */
   override fun onProgress(onUserClick: Boolean, viewId: String, current: Int, total: Int) {
     toast("click: $onUserClick\nviewId: $viewId\ncurrent: $current\ntotal: $total")
   }
 
+  /**
+   * Called when all MIVs in the current MaterialIntroSequence have been dismissed
+   */
   override fun onCompleted() {
     toast("Tutorial Complete")
   }
@@ -309,9 +337,9 @@ You can use your own highlight shapes if Circle and Rectangle do not work for yo
 |----------------|---------------------|-------------------|
 | ![Toolbar Item with sequence and custom colors](/art/toolbar_item_custom_colors.png?raw=true) | ![Custom Info View using resource layout](/art/custom_view_res.png?raw=true) | ![Custom Info View at runtime](/art/custom_view.png?raw=true) |
 
-| Sequence with multiple fragments |
-|----------------|
-|<img src="https://raw.githubusercontent.com/shripal17/MaterialIntroView-v2/master/art/sequence_multiple_fragments.png" width="360"/> |
+| Sequence with multiple fragments | Skip Button at Bottom Right Position with dotIconColor partially transparent | Skip Button at Top Right position |
+|----------------|----------------|----------------|
+|![Sequence with multiple fragments](/art/sequence_multiple_fragments.png?raw=true) | ![Skip Button at Bottom Right Position with dotIconColor partially transparent](/art/skip_bottom_right.png?raw=true) | ![Skip Button at Top Right position](/art/skip_top_right.png?raw=true) |
 
 # Full Demo GIF
 ![Whole Video](/art/materialintroviewgif.gif?raw=true)

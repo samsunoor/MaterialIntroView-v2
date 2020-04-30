@@ -1,8 +1,9 @@
 package com.codertainment.materialintro.prefs
 
 import android.content.Context
+import com.codertainment.materialintro.utils.SingletonHolder
 
-class PreferencesManager(context: Context) {
+internal class PreferencesManager private constructor(private val context: Context) {
   private val sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 
   fun isDisplayed(id: String?): Boolean {
@@ -21,7 +22,7 @@ class PreferencesManager(context: Context) {
     sharedPreferences.edit().clear().apply()
   }
 
-  companion object {
+  companion object : SingletonHolder<PreferencesManager, Context>(::PreferencesManager) {
     private const val PREFERENCES_NAME = "material_intro_preferences"
   }
 }

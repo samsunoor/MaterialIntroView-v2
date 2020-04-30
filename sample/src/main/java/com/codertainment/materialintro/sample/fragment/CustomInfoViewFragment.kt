@@ -6,15 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.sequence.SkipLocation
-import com.codertainment.materialintro.sequence.materialIntroSequence
 import com.codertainment.materialintro.shape.ShapeType
+import com.codertainment.materialintro.utils.materialIntroSequence
+import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.fragment_custom_info_view.*
 
 class CustomInfoViewFragment : Fragment() {
+
+  private val mSkipButtonStyling: MaterialButton.() -> Unit = {
+    setBackgroundColor(Color.parseColor("#009688"))
+    setIconResource(R.drawable.ic_skip)
+  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     // Inflate the layout for this fragment
@@ -33,10 +38,7 @@ class CustomInfoViewFragment : Fragment() {
         targetView = custom_view_res_button
         skipLocation = SkipLocation.BOTTOM_RIGHT
         dotIconColor = Color.argb(200, 255, 0, 0)
-        skipButtonStyling = {
-          setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
-          strokeWidth = 5
-        }
+        skipButtonStyling = mSkipButtonStyling
       }
       addConfig {
         isDotViewEnabled = false
@@ -46,6 +48,7 @@ class CustomInfoViewFragment : Fragment() {
         showOnlyOnce = false
         shapeType = ShapeType.RECTANGLE
         skipLocation = SkipLocation.TOP_RIGHT
+        skipButtonStyling = mSkipButtonStyling
       }
     }
   }

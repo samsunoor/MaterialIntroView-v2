@@ -2,12 +2,11 @@ package com.codertainment.materialintro.sequence
 
 import android.app.Activity
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import com.codertainment.materialintro.MaterialIntroConfiguration
 import com.codertainment.materialintro.animation.MaterialIntroListener
-import com.codertainment.materialintro.prefs.PreferencesManager
+import com.codertainment.materialintro.utils.materialIntro
+import com.codertainment.materialintro.utils.preferencesManager
 import com.codertainment.materialintro.view.MaterialIntroView
-import com.codertainment.materialintro.view.materialIntro
 
 /*
  * Created by Shripal Jain
@@ -35,9 +34,6 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
 
   private var counter = 0
   private var isMivShowing = false
-  private val preferencesManager by lazy {
-    PreferencesManager(activity)
-  }
   private val handler by lazy {
     Handler()
   }
@@ -74,7 +70,7 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
 
   fun add(config: MaterialIntroConfiguration) {
     val found = mivs.find { it.viewId == config.viewId || it.viewId == config.targetView?.tag?.toString() }
-    if (found != null && preferencesManager.isDisplayed(config.viewId ?: config.targetView?.tag?.toString())) return
+    if (found != null && activity.preferencesManager.isDisplayed(config.viewId ?: config.targetView?.tag?.toString())) return
     mivs.add(activity.materialIntro(config = config) {
       showSkip = this@MaterialIntroSequence.showSkip
       delayMillis = if (mivs.isEmpty()) initialDelay else 0
@@ -96,7 +92,7 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
     mivs[counter - 1].dismiss()
     for (i in 0 until mivs.size) {
       if (mivs[i].showOnlyOnce) {
-        preferencesManager.setDisplayed(mivs[i].viewId)
+        activity.preferencesManager.setDisplayed(mivs[i].viewId)
       }
     }
     counter = mivs.size
@@ -126,63 +122,16 @@ class MaterialIntroSequence private constructor(private val activity: Activity) 
 }
 
 interface MaterialIntroSequenceListener {
+  /**
+   * @param onUserClick if the MIV was dismissed by the user on click or it was auto-dismissed because it was set as displayed
+   * @param viewId viewId for the dismissed MIV
+   * @param current index of the dismissed MIV
+   * @param total Total number of MIVs in the current MaterialIntroSequence
+   */
   fun onProgress(onUserClick: Boolean, viewId: String, current: Int, total: Int)
+
+  /**
+   * Called when all MIVs in the current MaterialIntroSequence have been dismissed
+   */
   fun onCompleted()
-}
-
-val Activity.materialIntroSequence
-  get() = MaterialIntroSequence.getInstance(this)
-
-fun Activity.materialIntroSequence(
-  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
-  func: MaterialIntroSequence.() -> Unit
-): MaterialIntroSequence {
-  return materialIntroSequence.apply {
-    showSkip?.let {
-      this.showSkip = it
-    }
-    persistSkip?.let {
-      this.persistSkip = it
-    }
-    initialDelay?.let {
-      this.initialDelay = it
-    }
-    materialIntroSequenceListener?.let {
-      this.materialIntroSequenceListener = it
-    }
-    func()
-    start()
-  }
-}
-
-val Fragment.materialIntroSequence
-  get() = if (activity != null) MaterialIntroSequence.getInstance(activity!!) else null
-
-fun Fragment.materialIntroSequence(
-  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
-  func: MaterialIntroSequence.() -> Unit
-): MaterialIntroSequence? {
-  return materialIntroSequence.apply {
-    showSkip?.let {
-      this?.showSkip = it
-    }
-    persistSkip?.let {
-      this?.persistSkip = it
-    }
-    initialDelay?.let {
-      this?.initialDelay = it
-    }
-    materialIntroSequenceListener?.let {
-      this?.materialIntroSequenceListener = it
-    }
-    this?.func()
-    this?.start()
-  }
-}
-
-enum class SkipLocation {
-  TOP_RIGHT,
-  TOP_LEFT,
-  BOTTOM_LEFT,
-  BOTTOM_RIGHT
 }

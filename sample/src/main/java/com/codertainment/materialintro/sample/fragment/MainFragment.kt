@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.codertainment.materialintro.prefs.PreferencesManager
 import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.shape.Focus
 import com.codertainment.materialintro.shape.ShapeType
-import com.codertainment.materialintro.view.materialIntro
+import com.codertainment.materialintro.utils.materialIntro
+import com.codertainment.materialintro.utils.resetAllMivs
 import kotlinx.android.synthetic.main.content_main.*
 
-class MainFragment : Fragment(), View.OnClickListener {
+class MainFragment : Fragment() {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     return inflater.inflate(R.layout.content_main, container, false)
   }
@@ -21,14 +21,11 @@ class MainFragment : Fragment(), View.OnClickListener {
     super.onViewCreated(view, savedInstanceState)
     button_reset_all.setOnClickListener {
       if (activity == null) return@setOnClickListener
-      PreferencesManager(activity!!).resetAll()
+      requireContext().resetAllMivs()
     }
     showIntro(my_card, INTRO_CARD, "This is the info card! Hello There. You can set this text!")
   }
 
-  override fun onClick(v: View) {
-    if (v.id == R.id.button_reset_all) PreferencesManager(activity!!.applicationContext).resetAll()
-  }
 
   private fun showIntro(view: View, usageId: String, text: String) {
     materialIntro(true) {

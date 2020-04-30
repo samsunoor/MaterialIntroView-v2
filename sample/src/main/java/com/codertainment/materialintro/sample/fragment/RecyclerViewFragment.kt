@@ -13,7 +13,7 @@ import com.codertainment.materialintro.sample.R
 import com.codertainment.materialintro.sample.adapter.RecyclerViewAdapter
 import com.codertainment.materialintro.sample.model.Song
 import com.codertainment.materialintro.shape.Focus
-import com.codertainment.materialintro.view.materialIntro
+import com.codertainment.materialintro.utils.materialIntro
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 
 class RecyclerViewFragment : Fragment(), MaterialIntroListener {
