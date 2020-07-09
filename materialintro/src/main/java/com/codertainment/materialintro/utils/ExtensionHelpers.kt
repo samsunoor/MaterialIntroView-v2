@@ -26,16 +26,16 @@ import com.codertainment.materialintro.view.MaterialIntroView
  * @param show Indicates whether this instance of MaterialIntroView should show instantly after instantiation and initialisation
  */
 fun Activity.materialIntro(show: Boolean = false, config: MaterialIntroConfiguration? = null, func: MaterialIntroView.() -> Unit): MaterialIntroView =
-  MaterialIntroView(this).apply {
-    if (this@materialIntro is MaterialIntroListener) {
-      materialIntroListener = this@materialIntro
-    }
-    withConfig(config)
-    func()
-    if (show) {
-      show(this@materialIntro)
-    }
-  }
+        MaterialIntroView(this).apply {
+            if (this@materialIntro is MaterialIntroListener) {
+                materialIntroListener = this@materialIntro
+            }
+            withConfig(config)
+            func()
+            if (show) {
+                show(this@materialIntro)
+            }
+        }
 
 /**
  * Create an instance of MaterialIntroView for a Fragment's activity with the passed config or properties applied in the lambda
@@ -48,20 +48,20 @@ fun Activity.materialIntro(show: Boolean = false, config: MaterialIntroConfigura
  * @param show Indicates whether this instance of MaterialIntroView should show instantly after instantiation and initialisation
  */
 fun Fragment.materialIntro(show: Boolean = false, config: MaterialIntroConfiguration? = null, func: MaterialIntroView.() -> Unit): MaterialIntroView? {
-  return if (activity == null) null
-  else MaterialIntroView(activity!!).apply {
-    if (activity is MaterialIntroListener) {
-      materialIntroListener = activity as MaterialIntroListener
+    return if (activity == null) null
+    else MaterialIntroView(activity!!).apply {
+        if (activity is MaterialIntroListener) {
+            materialIntroListener = activity as MaterialIntroListener
+        }
+        if (this@materialIntro is MaterialIntroListener) {
+            materialIntroListener = this@materialIntro
+        }
+        withConfig(config)
+        func()
+        if (show) {
+            show(activity!!)
+        }
     }
-    if (this@materialIntro is MaterialIntroListener) {
-      materialIntroListener = this@materialIntro
-    }
-    withConfig(config)
-    func()
-    if (show) {
-      show(activity!!)
-    }
-  }
 }
 
 /**
@@ -70,22 +70,27 @@ fun Fragment.materialIntro(show: Boolean = false, config: MaterialIntroConfigura
  * @param viewId the viewId who's displayed state needs to be reset
  */
 fun Context.resetMivDisplayed(viewId: String?) {
-  preferencesManager.reset(viewId)
+    preferencesManager.reset(viewId)
 }
 
 /**
  * Reset all saved displayed states
  */
 fun Context.resetAllMivs() {
-  preferencesManager.resetAll()
+    preferencesManager.resetAll()
 }
 
-internal val Context.preferencesManager
-  get() = PreferencesManager.getInstance(this)
-
+internal val Context.preferencesManager: PreferencesManager
+    get() {
+        if (!PreferencesManager.isInitialized) {
+          val sharedPref = this.getSharedPreferences(PreferencesManager.PREFERENCES_NAME, Context.MODE_PRIVATE)
+          PreferencesManager.init(sharedPref)
+        }
+      return PreferencesManager
+    }
 
 val Activity.materialIntroSequence
-  get() = MaterialIntroSequence.getInstance(this)
+    get() = MaterialIntroSequence.getInstance(this)
 
 /**
  * Create/get MaterialIntroSequence for the current activity
@@ -102,32 +107,32 @@ val Activity.materialIntroSequence
  * button and new MIVs are added after that, for e.g. for another fragment, the new MIVs will be shown
  */
 fun Activity.materialIntroSequence(
-  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
-  func: MaterialIntroSequence.() -> Unit
+        initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
+        func: MaterialIntroSequence.() -> Unit
 ): MaterialIntroSequence {
-  return materialIntroSequence.apply {
-    if (this@materialIntroSequence is MaterialIntroSequenceListener) {
-      this.materialIntroSequenceListener = this@materialIntroSequence
+    return materialIntroSequence.apply {
+        if (this@materialIntroSequence is MaterialIntroSequenceListener) {
+            this.materialIntroSequenceListener = this@materialIntroSequence
+        }
+        showSkip?.let {
+            this.showSkip = it
+        }
+        persistSkip?.let {
+            this.persistSkip = it
+        }
+        initialDelay?.let {
+            this.initialDelay = it
+        }
+        materialIntroSequenceListener?.let {
+            this.materialIntroSequenceListener = it
+        }
+        func()
+        start()
     }
-    showSkip?.let {
-      this.showSkip = it
-    }
-    persistSkip?.let {
-      this.persistSkip = it
-    }
-    initialDelay?.let {
-      this.initialDelay = it
-    }
-    materialIntroSequenceListener?.let {
-      this.materialIntroSequenceListener = it
-    }
-    func()
-    start()
-  }
 }
 
 val Fragment.materialIntroSequence
-  get() = if (activity != null) MaterialIntroSequence.getInstance(activity!!) else null
+    get() = if (activity != null) MaterialIntroSequence.getInstance(activity!!) else null
 
 /**
  * Create/get MaterialIntroSequence for the current fragment's activity
@@ -144,30 +149,30 @@ val Fragment.materialIntroSequence
  * button and new MIVs are added after that, for e.g. for another fragment, the new MIVs will be shown
  */
 fun Fragment.materialIntroSequence(
-  initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
-  func: MaterialIntroSequence.() -> Unit
+        initialDelay: Long? = null, materialIntroSequenceListener: MaterialIntroSequenceListener? = null, showSkip: Boolean? = null, persistSkip: Boolean? = null,
+        func: MaterialIntroSequence.() -> Unit
 ): MaterialIntroSequence? {
-  return if (activity == null) null
-  else materialIntroSequence.apply {
-    if (activity is MaterialIntroSequenceListener) {
-      this?.materialIntroSequenceListener = activity as MaterialIntroSequenceListener
+    return if (activity == null) null
+    else materialIntroSequence.apply {
+        if (activity is MaterialIntroSequenceListener) {
+            this?.materialIntroSequenceListener = activity as MaterialIntroSequenceListener
+        }
+        if (this@materialIntroSequence is MaterialIntroSequenceListener) {
+            this?.materialIntroSequenceListener = this@materialIntroSequence
+        }
+        showSkip?.let {
+            this?.showSkip = it
+        }
+        persistSkip?.let {
+            this?.persistSkip = it
+        }
+        initialDelay?.let {
+            this?.initialDelay = it
+        }
+        materialIntroSequenceListener?.let {
+            this?.materialIntroSequenceListener = it
+        }
+        this?.func()
+        this?.start()
     }
-    if (this@materialIntroSequence is MaterialIntroSequenceListener) {
-      this?.materialIntroSequenceListener = this@materialIntroSequence
-    }
-    showSkip?.let {
-      this?.showSkip = it
-    }
-    persistSkip?.let {
-      this?.persistSkip = it
-    }
-    initialDelay?.let {
-      this?.initialDelay = it
-    }
-    materialIntroSequenceListener?.let {
-      this?.materialIntroSequenceListener = it
-    }
-    this?.func()
-    this?.start()
-  }
 }

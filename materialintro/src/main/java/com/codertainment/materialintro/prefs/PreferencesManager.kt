@@ -1,28 +1,32 @@
 package com.codertainment.materialintro.prefs
 
-import android.content.Context
-import com.codertainment.materialintro.utils.SingletonHolder
+import android.content.SharedPreferences
 
-internal class PreferencesManager private constructor(private val context: Context) {
-  private val sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+internal object PreferencesManager {
 
-  fun isDisplayed(id: String?): Boolean {
-    return sharedPreferences.getBoolean(id, false)
-  }
+    private lateinit var sharedPreferences: SharedPreferences
 
-  fun setDisplayed(id: String?) {
-    sharedPreferences.edit().putBoolean(id, true).apply()
-  }
+    val isInitialized = ::sharedPreferences.isInitialized
 
-  fun reset(id: String?) {
-    sharedPreferences.edit().putBoolean(id, false).apply()
-  }
+    fun init(sharedPreferences: SharedPreferences) {
+        this.sharedPreferences = sharedPreferences
+    }
 
-  fun resetAll() {
-    sharedPreferences.edit().clear().apply()
-  }
+    fun isDisplayed(id: String?): Boolean {
+        return sharedPreferences.getBoolean(id, false)
+    }
 
-  companion object : SingletonHolder<PreferencesManager, Context>(::PreferencesManager) {
-    private const val PREFERENCES_NAME = "material_intro_preferences"
-  }
+    fun setDisplayed(id: String?) {
+        sharedPreferences.edit().putBoolean(id, true).apply()
+    }
+
+    fun reset(id: String?) {
+        sharedPreferences.edit().putBoolean(id, false).apply()
+    }
+
+    fun resetAll() {
+        sharedPreferences.edit().clear().apply()
+    }
+
+    const val PREFERENCES_NAME = "material_intro_preferences"
 }
